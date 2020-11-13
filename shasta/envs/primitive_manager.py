@@ -79,7 +79,6 @@ class PrimitiveManager(object):
 
         # Initial formation
         if self.action['initial_formation']:
-            self.dt = 1
             # First point of formation
             self.action['centroid_pos'] = self.get_centroid()
             self.action['next_pos'] = self.action['centroid_pos']
@@ -91,12 +90,11 @@ class PrimitiveManager(object):
                     end=self.action['target_pos'])
                 self.action['next_pos'] = self.path_points[0]
         else:
-            self.dt = 0.025
             self.action['centroid_pos'] = self.get_centroid()
             distance = np.linalg.norm(self.action['centroid_pos'][0:2] -
                                       self.action['next_pos'][0:2])
 
-            if len(self.path_points) > 1 and distance < 0.1:
+            if len(self.path_points) > 1 and distance < 0.5:
                 self.path_points = np.delete(self.path_points, 0, 0)
                 self.action['next_pos'] = self.path_points[0]
 
