@@ -15,7 +15,7 @@ from envs.enhance_env import EnhanceEnv
 from default_actions.default_actions import (blue_team_actions,
                                              red_team_actions)
 
-config_path = Path(__file__).parents[1] / 'hsi/config/simulation_config.yml'
+config_path = Path(__file__).parents[1] / 'shasta/config/simulation_config.yml'
 config = yaml.load(open(str(config_path)), Loader=yaml.SafeLoader)
 
 

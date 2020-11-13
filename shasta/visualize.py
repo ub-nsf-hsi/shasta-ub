@@ -6,7 +6,7 @@ import pandas as pd
 import seaborn as sns
 import deepdish as dd
 
-config_path = Path(__file__).parents[1] / 'hsi/config/simulation_config.yml'
+config_path = Path(__file__).parents[1] / 'shasta/config/simulation_config.yml'
 config = yaml.load(open(str(config_path)), Loader=yaml.SafeLoader)
 
 
