@@ -16,11 +16,11 @@ shasta
 
 
 
-SHaSTA:  A simulator for human and swarm team applications. 
+SHaSTA:  A simulator for human and swarm team applications.
 
 
 * Free software: MIT license
-* Documentation: https://shasta.readthedocs.io.
+* Documentation: https://hemumanju.github.io/shasta-ub/
 
 
 Features
