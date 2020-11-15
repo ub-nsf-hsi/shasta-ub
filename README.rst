@@ -20,7 +20,7 @@ SHaSTA:  A simulator for human and swarm team applications.
 
 
 * Free software: MIT license
-* Documentation: https://hemumanju.github.io/shasta-ub/
+* Documentation: https://github.com/ub-nsf-hsi/shasta-ub
 
 
 Features
