@@ -163,3 +163,5 @@ texinfo_documents = [
 # Build instruction
 # Add above changes and run the following line
 # sphinx-build ./docs ./docs/html
+# Add .nojekyll file
+# Add index.html and refer it back to original index.html file
