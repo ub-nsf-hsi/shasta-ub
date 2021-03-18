@@ -71,34 +71,18 @@ class EnhanceEnv(BaseEnv):
         # self.red_team.action_manager.perform_action_allocation(
         #     red_actions['uav'], red_actions['ugv'])
 
-        step_time = []
-
         # Run the simulation
         while not done_rolling_actions and current_time <= duration:
             simulation_count += 1
             current_time = time.time() - start_time
 
             # Run the blue team (these can be made parallel)
-            action_time = time.time()
             done_rolling_actions = self.blue_team.execute()
             # Perform a step in simulation to update
             self.base_env_step()
-            step_time.append(time.time() - action_time)
 
-            # self.sensors.get_camera_image([0, 0, 10], image_type='rgb')
-
-            # # Run the red team (these can be made parallel)
-            # self.red_team.execute()
-            # # Perform a step in simulation to update
-            # self.base_env_step()
-
-            # # Interaction Manager (this over-rides the given actions)
-            # self.interaction_manager.update_actions(self.blue_team,
-            #                                         self.red_team)
-            # Perform a step in simulation to update
-            # self.base_env_step()
         # TODO: Need to implement state, action, and reward
-        return 1 / np.mean(step_time)
+        return None
 
     def get_reward(self):
         """Update reward of all the agents
