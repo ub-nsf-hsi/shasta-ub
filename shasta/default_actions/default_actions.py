@@ -26,8 +26,7 @@ def blue_team_actions(config):
     # Variables
     default_actions = collections.defaultdict(dict)
     # Read fields for all the platoons
-    read_path = Path(
-        __file__).parents[1] / 'config/blue_team_config_baseline.yml'
+    read_path = 'config/blue_team_config_baseline.yml'
     attr = yaml.load(open(str(read_path)), Loader=yaml.SafeLoader)
 
     # Setup the uav platoons
@@ -72,14 +71,11 @@ def red_team_actions(config, team_type=None):
 
     # Read fields for all the platoons
     if team_type == 'dynamic':
-        read_path = Path(
-            __file__).parents[1] / 'config/red_team_config_dynamic.yml'
+        read_path = 'config/red_team_config_dynamic.yml'
     elif team_type == 'static':
-        read_path = Path(
-            __file__).parents[1] / 'config/red_team_config_static.yml'
+        read_path = 'config/red_team_config_static.yml'
     else:
-        read_path = Path(
-            __file__).parents[1] / 'config/red_team_config_baseline.yml'
+        read_path = 'config/red_team_config_baseline.yml'
 
     attr = yaml.load(open(str(read_path)), Loader=yaml.SafeLoader)
 

@@ -1,16 +1,14 @@
 import yaml
-from pathlib import Path
 
-from envs.enhance_env import EnhanceEnv
-from default_actions.default_actions import (blue_team_actions,
-                                             red_team_actions)
+from shasta.enhance_env import EnhanceEnv
+from shasta.default_actions.default_actions import (blue_team_actions,
+                                                    red_team_actions)
 
-from gui.gui_main import MainGUI
+from shasta.visualize import plot_nodes
 
 from utils import skip_run
-from visualize import plot_nodes
 
-config_path = Path(__file__).parents[1] / 'shasta/config/simulation_config.yml'
+config_path = 'config/simulation_config.yml'
 config = yaml.load(open(str(config_path)), Loader=yaml.SafeLoader)
 
 with skip_run('run', 'Test New Framework') as check, check():
@@ -23,7 +21,3 @@ with skip_run('run', 'Test New Framework') as check, check():
     else:
         env = EnhanceEnv(config)
         env.step(default_blue_actions, default_red_actions)
-
-with skip_run('skip', 'Test New GUI') as check, check():
-    gui = MainGUI(1200, 800, config)
-    gui.run()

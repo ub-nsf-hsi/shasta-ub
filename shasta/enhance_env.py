@@ -6,7 +6,7 @@ from .base_env import BaseEnv
 from .blue_team.blue_base import BlueTeam
 from .red_team.red_base import RedTeam  # noqa
 
-from .sensors import Sensors
+from .sensors.sensors import Sensors
 from .interaction_manager import InteractionManager
 
 

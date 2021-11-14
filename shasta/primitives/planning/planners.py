@@ -126,12 +126,17 @@ class PathPlanning():
 
         # Convert the node index to node ID
         # TODO: Very dirty way to implement
+        # TODO: Verify the implementation of nearest nodes
         if not isinstance(start, int):
             start_lat_lon = self.convert_to_lat_lon(start)
-            start = ox.get_nearest_node(self.G, start_lat_lon)
+            start = ox.distance.nearest_nodes(self.G,
+                                              X=start_lat_lon[1],
+                                              Y=start_lat_lon[0])
         if not isinstance(end, int):
-            # end_lat_lon = self.convert_to_lat_lon(end)
-            end = ox.get_nearest_node(self.G, end)
+            end_lat_lon = self.convert_to_lat_lon(end)
+            end = ox.distance.nearest_nodes(self.G,
+                                            X=end_lat_lon[1],
+                                            Y=end_lat_lon[0])
 
         route = nx.shortest_path(self.G, start, end, weight='length')
         for u, v in zip(route[:-1], route[1:]):

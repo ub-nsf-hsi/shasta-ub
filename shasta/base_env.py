@@ -32,7 +32,6 @@ class BaseEnv(object):
         return None
 
     def base_env_step(self):
-
         # self.p.getCameraImage(1200, 1200)
         self.p.stepSimulation()
 

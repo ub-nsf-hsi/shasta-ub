@@ -1,9 +1,9 @@
 import numpy as np
 
-from ..sensors import Sensors
+from ..sensors.sensors import Sensors
 
 
-class UgV(object):
+class UaV(object):
     """This the base class for single UGV robot
     """
     def __init__(self, physics_client, init_pos, init_orientation, platoon_id,
@@ -27,15 +27,11 @@ class UgV(object):
         self.ammo = 100
         self.battery = 100
         self.functional = True
-        self.speed = config['ugv']['speed']
-        self.search_speed = config['ugv']['search_speed']
+        self.speed = config['uav']['speed']
+        self.search_speed = config['uav']['search_speed']
 
         # Config
         self.config = config
-
-        # Simulation parameters
-        # self.controller = UaVPDController()
-        self.reward = 0
 
         # Sensors
         self.sensors = Sensors(physics_client)
@@ -49,9 +45,13 @@ class UgV(object):
         """
         # Load the mesh
         path = '/'.join(
-            ['data/assets', 'vehicles', 'ground_vehicle_abstract.urdf'])
-        self.object = self.physics_client.loadURDF(path, self.init_pos,
-                                                   self.init_orientation)
+            ['data/assets', 'vehicles', 'arial_vehicle_abstract.urdf'])
+        self.object = self.physics_client.loadURDF(
+            path,
+            self.init_pos,
+            self.init_orientation,
+            flags=self.physics_client.URDF_USE_MATERIAL_COLORS_FROM_MTL,
+        )
         # Constraint
         self.constraint = self.physics_client.createConstraint(
             self.object, -1, -1, -1, self.physics_client.JOINT_FIXED,
@@ -117,7 +117,7 @@ class UgV(object):
             The position to which the vehicle should be moved.
         """
         self.current_pos, _ = self.get_pos_and_orientation()
-        position[2] = 0.5  # ground clearance
+        position[2] = 10.0
         self.physics_client.changeConstraint(self.constraint, position)
         return None
 
