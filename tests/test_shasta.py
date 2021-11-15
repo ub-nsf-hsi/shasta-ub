@@ -1,21 +1,37 @@
-#!/usr/bin/env python
-
-"""Tests for `shasta` package."""
+from shasta.actor import BaseActor
 
 
-import unittest
+class TestUxV(BaseActor):
+    def __init__(self):
+        super().__init__()
 
-from shasta import shasta
+    def _load(self):
+        path = '/'.join(
+            ['data/assets', 'vehicles', 'arial_vehicle_abstract.urdf'])
+        self.object = self.physics_client.loadURDF(
+            path,
+            self.init_pos,
+            self.init_orientation,
+            flags=self.physics_client.URDF_USE_MATERIAL_COLORS_FROM_MTL,
+        )
+        # Constraint
+        self.constraint = self.physics_client.createConstraint(
+            self.object, -1, -1, -1, self.physics_client.JOINT_FIXED,
+            [0, 0, 0], [0, 0, 0], self.init_pos)
 
+        # Change color depending on team type
+        self.physics_client.changeVisualShape(self.object,
+                                              -1,
+                                              rgbaColor=[0, 0, 1, 1])
 
-class TestShasta(unittest.TestCase):
-    """Tests for `shasta` package."""
+    def reset(self):
+        pass
 
-    def setUp(self):
-        """Set up test fixtures, if any."""
+    def get_observation(self):
+        pass
 
-    def tearDown(self):
-        """Tear down test fixtures, if any."""
+    def apply_action(self, action):
+        raise NotImplementedError
 
-    def test_000_something(self):
-        """Test something."""
+    def destroy(self):
+        pass
