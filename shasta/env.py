@@ -14,15 +14,22 @@ class ShastaEnv(gym.Env):
     """
     This is a carla environment, responsible of handling all the CARLA related steps of the training.
     """
-    def __init__(self, config, actors_group: dict = None):
+    def __init__(self, config, actor_groups: dict = None):
         """Initializes the environment"""
         self.config = config
 
-        self.experiment = self.config["experiment"]
-        # self.action_space = self.experiment.get_action_space()
-        # self.observation_space = self.experiment.get_observation_space()
+        self.experiment = self.config["experiment"]["type"](
+            self.config["experiment"])
 
-        self.core = ShastaCore(self.config, actors_group=actors_group)
+        if not self.experiment:
+            raise Exception(
+                "The experiment type cannot be empty. Please provide an experiment class"
+            )
+
+        self.action_space = self.experiment.get_action_space()
+        self.observation_space = self.experiment.get_observation_space()
+
+        self.core = ShastaCore(self.config, actor_groups=actor_groups)
         self.core.setup_experiment(self.config["experiment"])
 
         self.reset()
@@ -31,8 +38,8 @@ class ShastaEnv(gym.Env):
         self.experiment.reset()
 
         # Tick once and get the observations
-        raw_data = self.core.tick()
-        observation, _ = self.experiment.get_observation(raw_data)
+        raw_data = self.core.reset()
+        observation, _ = self.experiment.get_observation(raw_data, self.core)
 
         return observation
 

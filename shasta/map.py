@@ -1,3 +1,5 @@
+import warnings
+
 from pathlib import Path
 
 import numpy as np
@@ -5,14 +7,25 @@ import osmnx as ox
 import pandas as pd
 import networkx as nx
 
+from .assets import assets_root
+
 
 class Map():
-    def __init__(self, config, experiment_config) -> None:
-        self.config = config
+    def __init__(self, experiment_config) -> None:
         self.experiment_config = experiment_config
-        self.root_path = '/'.join([
-            self.config['urdf_data_path'], self.experiment_config['map_to_use']
-        ])
+
+        # Read path for ths assets
+        try:
+            self.asset_path = '/'.join(
+                [assets_root, self.experiment_config['map_to_use']])
+        except FileNotFoundError:
+            try:
+                self.asset_path = '/'.join(
+                    [assets_root, self.experiment_config['map_to_use']])
+            except FileNotFoundError:
+                raise FileNotFoundError(
+                    f"Please verify the {self.experiment_config['map_to_use']} is available in asset folder"
+                )
 
         # Initialize the assests
         self._affine_transformation_and_graph()
@@ -23,12 +36,12 @@ class Map():
         """Performs initial conversion of the lat lon to cartesian
         """
         # Graph
-        read_path = self.root_path + '/map.osm'
+        read_path = self.asset_path + '/map.osm'
         G = ox.graph_from_xml(read_path, simplify=True, bidirectional='walk')
         self.node_graph = nx.convert_node_labels_to_integers(G)
 
         # Transformation matrix
-        read_path = self.root_path + '/coordinates.csv'
+        read_path = self.asset_path + '/coordinates.csv'
         points = pd.read_csv(read_path)
         target = points[['x', 'z']].values
         source = points[['lat', 'lon']].values
@@ -43,13 +56,13 @@ class Map():
     def _setup_buildings(self):
         """Perfrom initial building setup.
         """
-        read_path = self.root_path + '/buildings.csv'
+        read_path = self.asset_path + '/buildings.csv'
 
         # Check if building information is already generated
         if Path(read_path).is_file():
             buildings = pd.read_csv(read_path)
         else:
-            read_path = self.root_path + '/map.osm'
+            read_path = self.asset_path + '/map.osm'
             G = ox.graph_from_xml(read_path)
             # TODO: This method doesn't work if the building info is not there in OSM
             nodes, streets = ox.graph_to_gdfs(G)
@@ -73,7 +86,7 @@ class Map():
             buildings['id'] = np.arange(len(buildings_proj))
 
             # Save the building info
-            save_path = self.root_path + '/buildings.csv'
+            save_path = self.asset_path + '/buildings.csv'
             buildings.to_csv(save_path, index=False)
 
         self.buildings = buildings
@@ -89,7 +102,7 @@ class Map():
         """
         return self.node_graph
 
-    def get_node_info(self, idx):
+    def get_node_info(self, node_index):
         """Get the information about a node.
 
         Parameters
@@ -102,7 +115,7 @@ class Map():
         dict
             A dictionary containing all the information about the node.
         """
-        return self.node_graph.nodes[idx]
+        return self.node_graph.nodes[node_index]
 
     def convert_to_lat_lon(self, point):
         """Convert a given point to lat lon co-ordinates
@@ -136,7 +149,7 @@ class Map():
         """
         return np.dot([point[0], point[1], 1], self.A)
 
-    def get_building_info(self, idx):
+    def get_building_info(self, building_index):
         """Get the information about a building such as perimeter,
             position, number of floors.
 
@@ -150,12 +163,24 @@ class Map():
             dict
                 A dictionary containing all the information about the building.
             """
-        return self.buildings.loc[self.buildings['id'] == idx]
+        return self.buildings.loc[self.buildings['id'] == building_index]
 
     def get_lat_lon_spawn_points(self, n_points=5):
-        gdf = ox.utils_geo.sample_points(self.node_graph, n_points)
-        points = np.vstack([gdf.centroid.y, gdf.centroid.x]).T
+
+        # TODO: Verify if the projection is correct and the warning is not
+        # affecting the values
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            gdf = ox.utils_geo.sample_points(self.node_graph, n_points)
+            points = np.vstack([gdf.centroid.y, gdf.centroid.x]).T
         return points
+
+    def get_catersian_node_position(self, node_index):
+        node_info = self.get_node_info(node_index=node_index)
+        lat = node_info['y']
+        lon = node_info['x']
+        cartesian_pos = np.dot([lat, lon, 1], self.A)
+        return cartesian_pos
 
     def get_catersian_spawn_points(self, n_points=5):
         lat_lon_points = self.get_lat_lon_spawn_points(n_points)

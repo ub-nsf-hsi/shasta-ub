@@ -1,4 +1,5 @@
 from shasta.actor import BaseActor
+from shasta.assets import assets_root
 
 
 class TestUxV(BaseActor):
@@ -7,7 +8,7 @@ class TestUxV(BaseActor):
 
     def _load(self):
         path = '/'.join(
-            ['data/assets', 'vehicles', 'arial_vehicle_abstract.urdf'])
+            [assets_root, 'vehicles', 'arial_vehicle_abstract.urdf'])
         self.object = self.physics_client.loadURDF(
             path,
             self.init_pos,

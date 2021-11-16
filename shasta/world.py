@@ -14,7 +14,7 @@ class World():
         self.actor_ids = []
 
         # Setup the map
-        self.map = Map(config, config['experiment'])
+        self.map = Map(config['experiment'])
 
         # Setup the phsysics client
         self._setup_physics_client()
@@ -29,11 +29,17 @@ class World():
             options = '--background_color_red=0.85 --background_color_green=0.85 --background_color_blue=0.85'  # noqa
             self.physics_client = bc.BulletClient(connection_mode=p.GUI,
                                                   options=options)
+
+            # Set the camera parameters
+            self.camer_distance = 150.0
+            self.camera_yaw = 0.0
+            self.camera_pitch = -89.999
+            self.camera_target_position = [0, 30, 0]
             self.physics_client.resetDebugVisualizerCamera(
-                cameraDistance=150,
-                cameraYaw=0,
-                cameraPitch=-89.999,
-                cameraTargetPosition=[0, 30, 0])
+                cameraDistance=self.camer_distance,
+                cameraYaw=self.camera_yaw,
+                cameraPitch=self.camera_pitch,
+                cameraTargetPosition=self.camera_target_position)
 
             self.physics_client.configureDebugVisualizer(
                 self.physics_client.COV_ENABLE_GUI, 0)
@@ -83,6 +89,11 @@ class World():
         -------
         None
         """
+        self.camer_distance = camera_distance
+        self.camera_yaw = camera_yaw
+        self.camera_pitch = camera_pitch
+        self.camera_target_position = camera_target_position
+
         self.physics_client.resetDebugVisualizerCamera(
             cameraDistance=camera_distance,
             cameraYaw=camera_yaw,
@@ -111,6 +122,3 @@ class World():
 
     def tick(self):
         self.physics_client.stepSimulation()
-
-    def reset(self):
-        self.physics_client.resetSimulation()

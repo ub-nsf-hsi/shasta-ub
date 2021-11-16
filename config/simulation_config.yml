@@ -7,16 +7,9 @@ time_step: 1.0
 headless: False
 dynamic: False
 
-map_data_path: 'data/processed/map_data'
-map_save_path: 'data/processed/map_data'
-urdf_data_path: 'data/assets'
-log_path: 'data/log/'
-rrt_data_path: 'data/processed/map_data/rrt'
-graph_save_path: 'data/processed/map_data/'
-image_save_path: 'data/processed/image_data/'
-
 ##---------------------------------------------------------------------##
 experiment:
+  type: []
   map_to_use: 'buffalo-medium'
   record_video: False
   log_states: False

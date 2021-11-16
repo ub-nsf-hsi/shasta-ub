@@ -5,11 +5,12 @@ from future.utils import with_metaclass
 class BaseActor(with_metaclass(ABCMeta, object)):
     """This the base class for single UGV robot
     """
+    physics_client = None
+    _loaded = False
+
     def __init__(self):
         self.states = {}
-        self._loaded = False
         self._actor_id = None
-        self.physics_client = None
         self.init_pos = None
         self.init_orientation = None
 

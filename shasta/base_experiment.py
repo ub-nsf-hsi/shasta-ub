@@ -7,6 +7,7 @@
 class BaseExperiment(object):
     def __init__(self, config):
         self.config = config
+        return None
 
     def reset(self):
         """Called at the beginning and each time the simulation is reset"""

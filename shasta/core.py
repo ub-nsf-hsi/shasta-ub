@@ -4,6 +4,8 @@ import signal
 
 from .world import World
 
+from .utils import get_initial_positions
+
 
 def kill_all_servers():
     """Kill all PIDs that start with Carla"""
@@ -19,11 +21,11 @@ class ShastaCore():
     Class responsible of handling all the different CARLA functionalities, such as server-client connecting,
     actor spawning and getting the sensors data.
     """
-    def __init__(self, config, actors_group: dict = None):
+    def __init__(self, config, actor_groups: dict = None):
         """Initialize the server and client"""
         self.config = config
         self.world = World(config)
-        self.actors_group = actors_group
+        self.actor_groups = actor_groups
         self.map = self.world.get_map()
 
         self.init_server()
@@ -36,17 +38,7 @@ class ShastaCore():
         """Initialize the hero and sensors"""
 
         # Load the environment
-        if experiment_config['detailed_model']:
-            read_path = '/'.join([
-                self.config['urdf_data_path'], experiment_config['map_to_use'],
-                'environment_collision_free.urdf'
-            ])
-        else:
-            read_path = '/'.join([
-                self.config['urdf_data_path'], experiment_config['map_to_use'],
-                'environment_collision_free.urdf'
-            ])
-
+        read_path = self.map.asset_path + '/environment_collision_free.urdf'
         self.world.load_world_model(read_path)
 
         # Spawn the actors in thes physics client
@@ -57,24 +49,43 @@ class ShastaCore():
 
     def reset(self):
         """This function resets / spawns the hero vehicle and its sensors"""
-        return None
+
+        # Reset all the actors
+        observations = {}
+        for group_id in self.actor_groups:
+            # Check if the entry is a list or not
+            if not isinstance(self.actor_groups[group_id], list):
+                self.actor_groups[group_id] = [self.actor_groups[group_id]]
+
+            obs_from_each_actor = []
+            for actor in self.actor_groups[group_id]:
+                # Reset the actor and collect the observation
+                actor.reset()
+                obs_from_each_actor.append(actor.get_observation)
+
+            observations[group_id] = obs_from_each_actor
+
+        return observations
 
     def spawn_actors(self):
         """Spawns vehicles and walkers, also setting up the Traffic Manager and its parameters"""
-        for group_id in self.actors_group:
+        for group_id in self.actor_groups:
             # Check if the entry is a list or not
-            if not isinstance(self.actors_group[group_id], list):
-                self.actors_group[group_id] = [self.actors_group[group_id]]
+            if not isinstance(self.actor_groups[group_id], list):
+                self.actor_groups[group_id] = [self.actor_groups[group_id]]
 
+            # Spawn the actors
             spawn_point = self.map.get_catersian_spawn_points()
-            for actor in self.actors_group[group_id]:
-                self.world.spawn_actor(actor, spawn_point)
+            positions = get_initial_positions(spawn_point, 10,
+                                              len(self.actor_groups[group_id]))
+            for actor, position in zip(self.actor_groups[group_id], positions):
+                self.world.spawn_actor(actor, position)
 
-    def get_actors_group(self):
-        return self.actors_group
+    def get_actor_groups(self):
+        return self.actor_groups
 
-    def get_actor_by_group_id(self, group_id):
-        return self.actors_group[group_id]
+    def get_actors_by_group_id(self, group_id):
+        return self.actor_groups[group_id]
 
     def tick(self):
         """Performs one tick of the simulation, moving all actors, and getting the sensor data"""
@@ -84,9 +95,9 @@ class ShastaCore():
         self.world.tick()
 
         # Collect the raw observation from all the actors in each actor group
-        for group_id in self.actors_group:
+        for group_id in self.actor_groups:
             obs_from_each_actor = []
-            for actor in self.actors_group[group_id]:
+            for actor in self.actor_groups[group_id]:
                 obs_from_each_actor.append(actor.get_observation)
 
             observations[group_id] = obs_from_each_actor
