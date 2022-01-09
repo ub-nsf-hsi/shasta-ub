@@ -31,6 +31,11 @@ class UaV(BaseActor):
     def load_asset(self):
         """Initial step of objects and constraints
         """
+        # Initial pos and orientation
+        if self.init_orientation is None:
+            self.init_orientation = self.physics_client.getQuaternionFromEuler(
+                [0, 0, np.pi / 2])
+
         # Load the mesh
         path = '/'.join(
             ['shasta/assets', 'vehicles', 'arial_vehicle_abstract.urdf'])

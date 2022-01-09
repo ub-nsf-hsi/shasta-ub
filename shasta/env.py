@@ -40,6 +40,13 @@ class ShastaEnv(gym.Env):
         self.reset()
 
     def reset(self):
+        """Reset the simulation
+
+        Returns
+        -------
+        [type]
+            [description]
+        """
         self.experiment.reset()
 
         # Tick once and get the observations
@@ -61,3 +68,6 @@ class ShastaEnv(gym.Env):
         reward = self.experiment.compute_reward(observation, self.core)
 
         return observation, reward, done, info
+
+    def close(self):
+        self.core.close_simulation()

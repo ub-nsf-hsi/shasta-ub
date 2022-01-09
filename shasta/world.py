@@ -22,6 +22,12 @@ class World():
         return None
 
     def _setup_physics_client(self):
+        """Setup the physics client
+
+        Returns
+        -------
+        None
+        """
         # Usage mode
         if self.config['headless']:
             self.physics_client = bc.BulletClient(connection_mode=p.DIRECT)
@@ -55,6 +61,13 @@ class World():
         return None
 
     def load_world_model(self, read_path):
+        """Load the URDF model
+
+        Parameters
+        ----------
+        read_path : str
+            The path to the URDF model
+        """
         self.physics_client.loadURDF(
             read_path, [0, 0, 0],
             self.physics_client.getQuaternionFromEuler([np.pi / 2, 0, 0]),
@@ -62,9 +75,23 @@ class World():
             useFixedBase=True)
 
     def get_physics_client(self):
+        """Ge the physics client
+
+        Returns
+        -------
+        object
+            The bullet physics client
+        """
         return self.physics_client
 
     def get_map(self):
+        """Get the map object
+
+        Returns
+        -------
+        object
+            The map object
+        """
         return self.map
 
     def change_camera_position(self,
@@ -102,18 +129,27 @@ class World():
         return None
 
     def spawn_actor(self, actor, spawn_point):
+        """Spawn the actor at a given point
+
+        Parameters
+        ----------
+        actor : object
+            An actor to spawm
+        spawn_point : array
+            Spawn point
+
+        Returns
+        -------
+        None
+        """
+        # Check if the physic client is added to the actor
+        if actor.physics_client is None:
+            actor.physics_client = self.physics_client
+
         if actor.init_pos is None:
             actor.init_pos = spawn_point
         else:
             actor.init_pos = self.map.convert_from_lat_lon(actor.init_pos)
-
-        if actor.init_orientation is None:
-            actor.init_orientation = self.physics_client.getQuaternionFromEuler(
-                [0, 0, np.pi / 2])
-
-        # Check if the physic client is added to the actor
-        if actor.physics_client is None:
-            actor.physics_client = self.physics_client
 
         # Load the actor
         actor._load()
@@ -121,4 +157,11 @@ class World():
         return None
 
     def tick(self):
+        """Step the physics simulation
+        """
         self.physics_client.stepSimulation()
+
+    def disconnect(self):
+        """Disconnect the physics client
+        """
+        p.disconnect(self.physics_client._client)

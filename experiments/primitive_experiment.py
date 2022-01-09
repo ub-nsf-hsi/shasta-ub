@@ -36,8 +36,10 @@ class PrimitiveExperiment(BaseExperiment):
         """
         # Get the actor group
         actor_groups = core.get_actor_groups()
+        self.dones = []
         for i in range(6):
-            self.actions[i].execute(actor_groups[i], target_pos=0)
+            done = self.actions[i].execute(actor_groups[i], target_pos=0)
+            self.dones.append(done)
 
     def get_observation(self, observation, core):
         """Function to do all the post processing of observations (sensor data).
@@ -52,8 +54,8 @@ class PrimitiveExperiment(BaseExperiment):
 
     def get_done_status(self, observation, core):
         """Returns whether or not the experiment has to end"""
-        return NotImplementedError
+        return self.dones
 
     def compute_reward(self, observation, core):
         """Computes the reward"""
-        pass
+        return 0

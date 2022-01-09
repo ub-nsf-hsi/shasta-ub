@@ -15,6 +15,22 @@ class Map():
         return None
 
     def _setup(self, experiment_config):
+        """Perform the initial experiment setup e.g., loading the map
+
+        Parameters
+        ----------
+        experiment_config : yaml
+            A yaml file providing the map configuration
+
+        Returns
+        -------
+        None
+
+        Raises
+        ------
+        FileNotFoundError
+            If the experiment config is none, raises a file not found error
+        """
         self.experiment_config = experiment_config
 
         # Read path for ths assets
@@ -36,6 +52,13 @@ class Map():
         return None
 
     def get_affine_transformation_and_graph(self):
+        """Get the transformation matrix and the node graph of the map
+
+        Returns
+        -------
+        array, node graph
+            The transformation matrix and the node graph
+        """
         return self.A, self.node_graph
 
     def _affine_transformation_and_graph(self):
@@ -172,7 +195,18 @@ class Map():
         return self.buildings.loc[self.buildings['id'] == building_index]
 
     def get_lat_lon_spawn_points(self, n_points=5):
+        """Get the latitude and longitude spawn points
 
+        Parameters
+        ----------
+        n_points : int, optional
+            Number of points to random latitude and longitude points, by default 5
+
+        Returns
+        -------
+        array
+            An array of cartesian spawn points
+        """
         # TODO: Verify if the projection is correct and the warning is not
         # affecting the values
         with warnings.catch_warnings():
@@ -181,24 +215,62 @@ class Map():
             points = np.vstack([gdf.centroid.y, gdf.centroid.x]).T
         return points
 
-    def get_catersian_node_position(self, node_index):
+    def get_cartesian_node_position(self, node_index):
+        """Get the cartesian co-ordinates given the node index
+
+        Parameters
+        ----------
+        node_index : int
+            The node index in the map
+
+        Returns
+        -------
+        array
+            The cartesian co-ordinates
+        """
         node_info = self.get_node_info(node_index=node_index)
         lat = node_info['y']
         lon = node_info['x']
         cartesian_pos = np.dot([lat, lon, 1], self.A)
         return cartesian_pos
 
-    def get_catersian_spawn_points(self, n_points=5):
+    def get_cartesian_spawn_points(self, n_points=5):
+        """Get the cartesian spawn points
+
+        Parameters
+        ----------
+        n_points : int, optional
+            Number of points to random cartesian co-ordinates, by default 5
+
+        Returns
+        -------
+        array
+            An array of cartesian spawn points
+        """
         lat_lon_points = self.get_lat_lon_spawn_points(n_points)
 
-        catersian_spawn_points = []
+        cartesian_spawn_points = []
         for point in lat_lon_points:
-            catersian_spawn_points.append(
+            cartesian_spawn_points.append(
                 np.dot([point[0], point[1], 1], self.A))
-        return catersian_spawn_points[0]
+        return cartesian_spawn_points[0]
 
     def get_all_buildings(self):
+        """Get all the buildings
+
+        Returns
+        -------
+        dataframe
+            A dataframe with all the building information
+        """
         return self.buildings
 
     def get_transformation_matrix(self):
+        """Get the transformation matrix to convert lat lon to cartesian
+
+        Returns
+        -------
+        array
+            The transformation matrix
+        """
         return self.A

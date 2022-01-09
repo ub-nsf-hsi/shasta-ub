@@ -7,7 +7,7 @@ class Formation(object):
     """ Formation control primitive using region based shape control.
     Coded by: Apurvakumar Jani, Date: 18/9/2019
     """
-    def __init__(self):
+    def __init__(self, config=None):
         # Initialise the parameters
         self.a = 5
         self.b = 5
@@ -177,7 +177,7 @@ class PathPlanning(object):
         Parameters
         ----------
         start : array
-            A catersian co-ordinate specifying the start position
+            A cartesian co-ordinate specifying the start position
         end : array
             A node ID specifying the end position
         n_splits : int, optional

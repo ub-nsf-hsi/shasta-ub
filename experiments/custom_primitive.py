@@ -41,8 +41,16 @@ class FormationWithPlanning():
         # Update the path points
         self.update_path_points()
 
+        return self.get_done_status()
+
     def update_path_points(self):
         distance = np.linalg.norm(self.centroid[0:2] - self.next_pos[0:2])
 
         if len(self.path_points) > 1 and distance < 0.5:
             self.path_points = np.delete(self.path_points, 0, 0)
+
+    def get_done_status(self):
+        if len(self.path_points) <= 2:
+            return True
+        else:
+            return False

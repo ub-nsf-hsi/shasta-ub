@@ -27,9 +27,9 @@ with skip_run('run', 'Test Experiment Framework') as check, check():
 
     actor_groups = create_actor_groups()
     config['experiment']['type'] = PrimitiveExperiment
-
     env = ShastaEnv(config, actor_groups=actor_groups)
 
     for i in range(50000):
-        env.step(0)
-        # time.sleep(0.01)
+        observation, reward, done, info = env.step(0)
+        if all(done):
+            break

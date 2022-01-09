@@ -8,6 +8,19 @@ from future.utils import with_metaclass
 
 class BaseExperiment(with_metaclass(ABCMeta, object)):
     def __init__(self, config, core):
+        """The base experiment which other experiments should inherit
+
+        Parameters
+        ----------
+        config : yaml
+            The experiment configuration file
+        core : object
+            The SHASTA core object
+
+        Returns
+        -------
+        None
+        """
         self.config = config
         self.core = core
 
@@ -33,7 +46,7 @@ class BaseExperiment(with_metaclass(ABCMeta, object)):
 
     @abstractmethod
     def apply_actions(self, actions, core):
-        """Given the action, returns a carla.VehicleControl() which will be applied to the hero
+        """Given the action, applies the action to group or individual actor
 
         :param action: value outputted by the policy
         """

@@ -52,9 +52,23 @@ class ShastaCore():
         self.spawn_actors()
 
     def get_world(self):
+        """Get the World object from the simulation
+
+        Returns
+        -------
+        object
+            The world object
+        """
         return self.world
 
     def get_map(self):
+        """Get the Map object from the simulation
+
+        Returns
+        -------
+        object
+            The map object
+        """
         return self.map
 
     def reset(self):
@@ -85,16 +99,36 @@ class ShastaCore():
                 self.actor_groups[group_id] = [self.actor_groups[group_id]]
 
             # Spawn the actors
-            spawn_point = self.map.get_catersian_spawn_points()
+            spawn_point = self.map.get_cartesian_spawn_points()
             positions = get_initial_positions(spawn_point, 10,
                                               len(self.actor_groups[group_id]))
             for actor, position in zip(self.actor_groups[group_id], positions):
                 self.world.spawn_actor(actor, position)
 
     def get_actor_groups(self):
+        """Get the actor groups
+
+        Returns
+        -------
+        dict
+            The actor groups as a dict with group id as the key
+            list of actors as the value
+        """
         return self.actor_groups
 
     def get_actors_by_group_id(self, group_id):
+        """Get a list of actor given by group id
+
+        Parameters
+        ----------
+        group_id : int
+            Group id to be returned
+
+        Returns
+        -------
+        list
+            A list of actor given the group id
+        """
         return self.actor_groups[group_id]
 
     def tick(self):
@@ -105,12 +139,16 @@ class ShastaCore():
         self.world.tick()
 
         # Collect the raw observation from all the actors in each actor group
-        for group_id in self.actor_groups:
+        for group in self.actor_groups:
             obs_from_each_actor = [
-                actor.get_observation()
-                for actor in self.actor_groups[group_id]
+                actor.get_observation() for actor in self.actor_groups[group]
             ]
 
-            observations[group_id] = obs_from_each_actor
+            observations[group] = obs_from_each_actor
 
         return observations
+
+    def close_simulation(self):
+        """Close the simulation
+        """
+        self.world.disconnect()

@@ -28,24 +28,57 @@ class BaseActor(with_metaclass(ABCMeta, object)):
         return actor_ids
 
     def get_actor_id(self):
+        """Get the actor id
+
+        Returns
+        -------
+        int
+            The actor id in the simulation
+        """
         return self._actor_id
 
     @abstractmethod
-    def load_asset(self):
-        pass
-
-    @abstractmethod
-    def reset(self):
+    def load_asset(self, *args, **kwargs):
+        """Load the assests of the actor.
+        """
         raise NotImplementedError
 
     @abstractmethod
-    def get_observation(self):
+    def reset(self, *args, **kwargs):
+        """Reset the actor
+
+        Raises
+        ------
+        NotImplementedError
+        """
         raise NotImplementedError
 
     @abstractmethod
-    def apply_action(self, action):
+    def get_observation(self, *args, **kwargs):
+        """Get the observation from the actor.
+
+        Raises
+        ------
+        NotImplementedError
+        """
         raise NotImplementedError
 
     @abstractmethod
-    def destroy(self):
+    def apply_action(self, *args, **kwargs):
+        """Apply the action to the actor
+
+        Raises
+        ------
+        NotImplementedError
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def destroy(self, *args, **kwargs):
+        """Destroy the actor
+
+        Raises
+        ------
+        NotImplementedError
+        """
         raise NotImplementedError

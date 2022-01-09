@@ -66,7 +66,7 @@ Classes
 
       Finds a path between start and end using path graph
 
-      :param start: A catersian co-ordinate specifying the start position
+      :param start: A cartesian co-ordinate specifying the start position
       :type start: array
       :param end: A node ID specifying the end position
       :type end: array
