@@ -12,14 +12,22 @@ from .core import ShastaCore
 
 class ShastaEnv(gym.Env):
     """
-    This is a carla environment, responsible of handling all the CARLA related steps of the training.
+    This is a shasta environment, responsible of handling all the SHASTA related steps of the training.
     """
     def __init__(self, config, actor_groups: dict = None):
         """Initializes the environment"""
         self.config = config
 
+        # Check if experiment config is present
+        if not self.config["experiment"]:
+            raise Exception("The config should have experiment configuration")
+
+        # Setup the core
+        self.core = ShastaCore(self.config, actor_groups=actor_groups)
+        self.core.setup_experiment(self.config["experiment"])
+
         self.experiment = self.config["experiment"]["type"](
-            self.config["experiment"])
+            self.config["experiment"], self.core)
 
         if not self.experiment:
             raise Exception(
@@ -28,9 +36,6 @@ class ShastaEnv(gym.Env):
 
         self.action_space = self.experiment.get_action_space()
         self.observation_space = self.experiment.get_observation_space()
-
-        self.core = ShastaCore(self.config, actor_groups=actor_groups)
-        self.core.setup_experiment(self.config["experiment"])
 
         self.reset()
 

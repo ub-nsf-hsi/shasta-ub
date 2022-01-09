@@ -1,45 +1,44 @@
-#!/usr/bin/env python
+from shasta.base_experiment import BaseExperiment
 
-# This work is licensed under the terms of the MIT license.
-# For a copy, see <https://opensource.org/licenses/MIT>.
-from abc import ABCMeta, abstractmethod
-from future.utils import with_metaclass
+from .custom_primitive import FormationWithPlanning
 
 
-class BaseExperiment(with_metaclass(ABCMeta, object)):
+class PrimitiveExperiment(BaseExperiment):
     def __init__(self, config, core):
-        self.config = config
-        self.core = core
+        super().__init__(config, core)
 
-        return None
+        # Primitive setup
+        self.actions = {}
+        env_map = core.get_map()
+        for i in range(6):
+            self.actions[i] = FormationWithPlanning(env_map)
 
     def reset(self):
         """Called at the beginning and each time the simulation is reset"""
         pass
 
-    @abstractmethod
     def get_action_space(self):
         """Returns the action space"""
-        raise NotImplementedError
+        pass
 
-    @abstractmethod
     def get_observation_space(self):
         """Returns the observation space"""
-        raise NotImplementedError
+        pass
 
     def get_actions(self):
         """Returns the actions"""
-        raise NotImplementedError
+        pass
 
-    @abstractmethod
     def apply_actions(self, actions, core):
         """Given the action, returns a carla.VehicleControl() which will be applied to the hero
 
         :param action: value outputted by the policy
         """
-        raise NotImplementedError
+        # Get the actor group
+        actor_groups = core.get_actor_groups()
+        for i in range(6):
+            self.actions[i].execute(actor_groups[i], target_pos=0)
 
-    @abstractmethod
     def get_observation(self, observation, core):
         """Function to do all the post processing of observations (sensor data).
 
@@ -49,7 +48,7 @@ class BaseExperiment(with_metaclass(ABCMeta, object)):
         as well as a variable with additional information about such observation.
         The information variable can be empty
         """
-        return NotImplementedError
+        return None, {}
 
     def get_done_status(self, observation, core):
         """Returns whether or not the experiment has to end"""
@@ -57,4 +56,4 @@ class BaseExperiment(with_metaclass(ABCMeta, object)):
 
     def compute_reward(self, observation, core):
         """Computes the reward"""
-        return NotImplementedError
+        pass

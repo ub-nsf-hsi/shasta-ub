@@ -2,8 +2,8 @@ from shasta.base_experiment import BaseExperiment
 
 
 class SimpleExperiment(BaseExperiment):
-    def __init__(self, config):
-        super().__init__(config)
+    def __init__(self, config, core):
+        super().__init__(config, core)
         pass
 
     def reset(self):
@@ -38,6 +38,7 @@ class SimpleExperiment(BaseExperiment):
         as well as a variable with additional information about such observation.
         The information variable can be empty
         """
+        print(observation)
         return None, {}
 
     def get_done_status(self, observation, core):

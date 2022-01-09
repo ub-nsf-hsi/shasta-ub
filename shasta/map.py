@@ -11,7 +11,10 @@ from .assets import assets_root
 
 
 class Map():
-    def __init__(self, experiment_config) -> None:
+    def __init__(self) -> None:
+        return None
+
+    def _setup(self, experiment_config):
         self.experiment_config = experiment_config
 
         # Read path for ths assets
@@ -31,6 +34,9 @@ class Map():
         self._affine_transformation_and_graph()
         self._setup_buildings()
         return None
+
+    def get_affine_transformation_and_graph(self):
+        return self.A, self.node_graph
 
     def _affine_transformation_and_graph(self):
         """Performs initial conversion of the lat lon to cartesian

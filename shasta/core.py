@@ -18,14 +18,20 @@ def kill_all_servers():
 
 class ShastaCore():
     """
-    Class responsible of handling all the different CARLA functionalities, such as server-client connecting,
-    actor spawning and getting the sensors data.
+    Class responsible of handling all the different CARLA functionalities,
+    such as server-client connecting, actor spawning,
+    and getting the sensors data.
     """
     def __init__(self, config, actor_groups: dict = None):
         """Initialize the server and client"""
         self.config = config
-        self.world = World(config)
         self.actor_groups = actor_groups
+
+        # Verify if the actor groups is a dictionary
+        if not isinstance(self.actor_groups, dict):
+            raise TypeError('Actor groups should be of type dict')
+
+        self.world = World(config)
         self.map = self.world.get_map()
 
         self.init_server()
@@ -37,7 +43,8 @@ class ShastaCore():
     def setup_experiment(self, experiment_config):
         """Initialize the hero and sensors"""
 
-        # Load the environment
+        # Load the environment and setup the map
+        self.map._setup(experiment_config)
         read_path = self.map.asset_path + '/environment_collision_free.urdf'
         self.world.load_world_model(read_path)
 
@@ -46,6 +53,9 @@ class ShastaCore():
 
     def get_world(self):
         return self.world
+
+    def get_map(self):
+        return self.map
 
     def reset(self):
         """This function resets / spawns the hero vehicle and its sensors"""
@@ -96,9 +106,10 @@ class ShastaCore():
 
         # Collect the raw observation from all the actors in each actor group
         for group_id in self.actor_groups:
-            obs_from_each_actor = []
-            for actor in self.actor_groups[group_id]:
-                obs_from_each_actor.append(actor.get_observation)
+            obs_from_each_actor = [
+                actor.get_observation()
+                for actor in self.actor_groups[group_id]
+            ]
 
             observations[group_id] = obs_from_each_actor
 

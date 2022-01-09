@@ -6,7 +6,7 @@ from shasta.actor import BaseActor
 class UgV(BaseActor):
     """This the base class for single UGV robot
     """
-    def __init__(self):
+    def __init__(self, config=None):
         # Platoon properties
         self.vehicle_id = 0
         self.platoon_id = 0
@@ -22,12 +22,12 @@ class UgV(BaseActor):
         self.ammo = 100
         self.battery = 100
         self.functional = True
-        self.speed = 0.5
+        self.speed = 2.5
         self.search_speed = 0.25
 
         return None
 
-    def _load(self):
+    def load_asset(self):
         """Initial step of objects and constraints
         """
         # Load the mesh

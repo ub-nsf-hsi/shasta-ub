@@ -14,7 +14,7 @@ class World():
         self.actor_ids = []
 
         # Setup the map
-        self.map = Map(config['experiment'])
+        self.map = Map()
 
         # Setup the phsysics client
         self._setup_physics_client()
@@ -116,7 +116,7 @@ class World():
             actor.physics_client = self.physics_client
 
         # Load the actor
-        actor.load()
+        actor._load()
         self.actor_ids.append(actor.get_actor_id())
         return None
 

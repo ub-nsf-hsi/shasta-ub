@@ -14,12 +14,12 @@ class BaseActor(with_metaclass(ABCMeta, object)):
         self.init_pos = None
         self.init_orientation = None
 
-    def load(self):
+    def _load(self):
         """Load object into pybullet and return list of loaded body ids."""
         if self._loaded:
             raise ValueError("Cannot load an actor multiple times.")
         self._loaded = True
-        actor_ids = self._load()
+        actor_ids = self.load_asset()
 
         if not isinstance(actor_ids, list):
             actor_ids = [actor_ids]
@@ -31,7 +31,7 @@ class BaseActor(with_metaclass(ABCMeta, object)):
         return self._actor_id
 
     @abstractmethod
-    def _load(self):
+    def load_asset(self):
         pass
 
     @abstractmethod
