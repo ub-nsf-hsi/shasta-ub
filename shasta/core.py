@@ -2,7 +2,11 @@ import os
 import psutil
 import signal
 
+import pybullet as p
+from pybullet_utils import bullet_client as bc
+
 from .world import World
+from .map import Map
 
 from .utils import get_initial_positions
 
@@ -32,9 +36,65 @@ class ShastaCore():
             raise TypeError('Actor groups should be of type dict')
 
         self.world = World(config)
-        self.map = self.world.get_map()
+        # Setup the map
+        self.map = Map()
 
         self.init_server()
+        self._setup_physics_client()
+
+    def _setup_physics_client(self):
+        """Setup the physics client
+
+        Returns
+        -------
+        None
+        """
+        # Usage mode
+        if self.config['headless']:
+            self.physics_client = bc.BulletClient(connection_mode=p.DIRECT)
+        else:
+            options = '--background_color_red=0.85 --background_color_green=0.85 --background_color_blue=0.85'  # noqa
+            self.physics_client = bc.BulletClient(connection_mode=p.GUI,
+                                                  options=options)
+
+            # Set the camera parameters
+            self.camer_distance = 150.0
+            self.camera_yaw = 0.0
+            self.camera_pitch = -89.999
+            self.camera_target_position = [0, 30, 0]
+            self.physics_client.resetDebugVisualizerCamera(
+                cameraDistance=self.camer_distance,
+                cameraYaw=self.camera_yaw,
+                cameraPitch=self.camera_pitch,
+                cameraTargetPosition=self.camera_target_position)
+
+            self.physics_client.configureDebugVisualizer(
+                self.physics_client.COV_ENABLE_GUI, 0)
+
+        # Set gravity
+        self.physics_client.setGravity(0, 0, -9.81)
+
+        # Set parameters for simulation
+        self.physics_client.setPhysicsEngineParameter(
+            fixedTimeStep=self.config['time_step'] / 10,
+            numSubSteps=1,
+            numSolverIterations=5)
+
+        # Inject physics client
+        if self.world.physics_client is None:
+            self.world.physics_client = self.physics_client
+
+        return None
+
+    def get_physics_client(self):
+        """Ge the physics client
+
+        Returns
+        -------
+        object
+            The bullet physics client
+        """
+        return self.physics_client
 
     def init_server(self):
         """Start a server on a random port"""
@@ -44,11 +104,11 @@ class ShastaCore():
         """Initialize the hero and sensors"""
 
         # Load the environment and setup the map
-        self.map._setup(experiment_config)
+        self.map.setup(experiment_config)
         read_path = self.map.asset_path + '/environment_collision_free.urdf'
         self.world.load_world_model(read_path)
 
-        # Spawn the actors in thes physics client
+        # Spawn the actors in the physics client
         self.spawn_actors()
 
     def get_world(self):
@@ -103,6 +163,12 @@ class ShastaCore():
             positions = get_initial_positions(spawn_point, 10,
                                               len(self.actor_groups[group_id]))
             for actor, position in zip(self.actor_groups[group_id], positions):
+                if actor.init_pos is None:
+                    actor.init_pos = position
+                else:
+                    actor.init_pos = self.map.convert_from_lat_lon(
+                        actor.init_pos)
+
                 self.world.spawn_actor(actor, position)
 
     def get_actor_groups(self):
@@ -136,7 +202,7 @@ class ShastaCore():
         observations = {}
 
         # Tick once the simulation
-        self.world.tick()
+        self.physics_client.stepSimulation()
 
         # Collect the raw observation from all the actors in each actor group
         for group in self.actor_groups:
@@ -151,4 +217,4 @@ class ShastaCore():
     def close_simulation(self):
         """Close the simulation
         """
-        self.world.disconnect()
+        p.disconnect(self.physics_client._client)

@@ -14,53 +14,6 @@ class Map():
     def __init__(self) -> None:
         return None
 
-    def _setup(self, experiment_config):
-        """Perform the initial experiment setup e.g., loading the map
-
-        Parameters
-        ----------
-        experiment_config : yaml
-            A yaml file providing the map configuration
-
-        Returns
-        -------
-        None
-
-        Raises
-        ------
-        FileNotFoundError
-            If the experiment config is none, raises a file not found error
-        """
-        self.experiment_config = experiment_config
-
-        # Read path for ths assets
-        try:
-            self.asset_path = '/'.join(
-                [assets_root, self.experiment_config['map_to_use']])
-        except FileNotFoundError:
-            try:
-                self.asset_path = '/'.join(
-                    [assets_root, self.experiment_config['map_to_use']])
-            except FileNotFoundError:
-                raise FileNotFoundError(
-                    f"Please verify the {self.experiment_config['map_to_use']} is available in asset folder"
-                )
-
-        # Initialize the assests
-        self._affine_transformation_and_graph()
-        self._setup_buildings()
-        return None
-
-    def get_affine_transformation_and_graph(self):
-        """Get the transformation matrix and the node graph of the map
-
-        Returns
-        -------
-        array, node graph
-            The transformation matrix and the node graph
-        """
-        return self.A, self.node_graph
-
     def _affine_transformation_and_graph(self):
         """Performs initial conversion of the lat lon to cartesian
         """
@@ -120,6 +73,53 @@ class Map():
 
         self.buildings = buildings
         return None
+
+    def setup(self, experiment_config):
+        """Perform the initial experiment setup e.g., loading the map
+
+        Parameters
+        ----------
+        experiment_config : yaml
+            A yaml file providing the map configuration
+
+        Returns
+        -------
+        None
+
+        Raises
+        ------
+        FileNotFoundError
+            If the experiment config is none, raises a file not found error
+        """
+        self.experiment_config = experiment_config
+
+        # Read path for ths assets
+        try:
+            self.asset_path = '/'.join(
+                [assets_root, self.experiment_config['map_to_use']])
+        except FileNotFoundError:
+            try:
+                self.asset_path = '/'.join(
+                    [assets_root, self.experiment_config['map_to_use']])
+            except FileNotFoundError:
+                raise FileNotFoundError(
+                    f"Please verify the {self.experiment_config['map_to_use']} is available in asset folder"
+                )
+
+        # Initialize the assests
+        self._affine_transformation_and_graph()
+        self._setup_buildings()
+        return None
+
+    def get_affine_transformation_and_graph(self):
+        """Get the transformation matrix and the node graph of the map
+
+        Returns
+        -------
+        array, node graph
+            The transformation matrix and the node graph
+        """
+        return self.A, self.node_graph
 
     def get_node_graph(self):
         """Get the node graph of the world
