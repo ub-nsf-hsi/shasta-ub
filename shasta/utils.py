@@ -1,53 +1,26 @@
-import sys
-from contextlib import contextmanager
+import numpy as np
 
 
-class SkipWith(Exception):
-    pass
-
-
-@contextmanager
-def skip_run(flag, f):
-    """To skip a block of code.
+def get_initial_positions(cartesian_pos, r, n):
+    """Initial position for actor in the form of a ring
 
     Parameters
     ----------
-    flag : str
-        skip or run.
+    cartesian_pos : array
+        Initial cartesian pos
+    r : float
+        Radius of formation
+    n : int
+        Number of points in the circle
 
     Returns
     -------
-    None
-
+    array
+        An array of points in the form of a ring
     """
-    @contextmanager
-    def check_active():
-        deactivated = ['skip']
-        p = ColorPrint()  # printing options
-        if flag in deactivated:
-            p.print_skip('{:>12}  {:>2}  {:>12}'.format(
-                'Skipping the block', '|', f))
-            raise SkipWith()
-        else:
-            p.print_run('{:>12}  {:>3}  {:>12}'.format('Running the block',
-                                                       '|', f))
-            yield
-
-    try:
-        yield check_active
-    except SkipWith:
-        pass
-
-
-class ColorPrint:
-    @staticmethod
-    def print_skip(message, end='\n'):
-        sys.stderr.write('\x1b[88m' + message.strip() + '\x1b[0m' + end)
-
-    @staticmethod
-    def print_run(message, end='\n'):
-        sys.stdout.write('\x1b[1;32m' + message.strip() + '\x1b[0m' + end)
-
-    @staticmethod
-    def print_warn(message, end='\n'):
-        sys.stderr.write('\x1b[1;33m' + message.strip() + '\x1b[0m' + end)
+    positions = []
+    t = np.linspace(0, 2 * np.pi, n)
+    x = cartesian_pos[0] + r * np.cos(t)
+    y = cartesian_pos[1] + r * np.sin(t)
+    positions = np.asarray([x, y, x * 0 + 1]).T.tolist()
+    return positions

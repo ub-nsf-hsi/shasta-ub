@@ -4,6 +4,13 @@ import osmnx as ox
 
 
 def plot_nodes(config):
+    """Visualize the node graph
+
+    Parameters
+    ----------
+    config : yaml
+        a yaml file providing the configuration
+    """
     read_path = '/'.join([
         config['urdf_data_path'], config['simulation']['map_to_use'], 'map.osm'
     ])
