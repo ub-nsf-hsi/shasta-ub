@@ -7,7 +7,7 @@ from shasta.env import ShastaEnv
 from shasta.preprocessing.utils import extract_building_info
 
 from experiments.simple_experiment import SimpleExperiment
-from experiments.complex_experiment.experiment import SearchingExperiment
+from experiments.complex_experiment import SearchingExperiment
 from experiments.actor_groups import create_actor_groups
 
 config_path = 'config/simulation_config.yml'
