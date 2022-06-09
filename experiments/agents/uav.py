@@ -4,13 +4,13 @@ from shasta.actor import BaseActor
 
 
 class UaV(BaseActor):
-    """This the base class for single UGV robot
-    """
-    def __init__(self, config=None):
+    """This the base class for single UGV robot"""
 
+    def __init__(self, config=None):
         # Platoon properties
         self.vehicle_id = 0
         self.platoon_id = 0
+        self.type = 'uav'
 
         # Properties UAV
         self.init_pos = None
@@ -29,16 +29,15 @@ class UaV(BaseActor):
         return None
 
     def load_asset(self):
-        """Initial step of objects and constraints
-        """
+        """Initial step of objects and constraints"""
         # Initial pos and orientation
         if self.init_orientation is None:
             self.init_orientation = self.physics_client.getQuaternionFromEuler(
-                [0, 0, np.pi / 2])
+                [0, 0, np.pi / 2]
+            )
 
         # Load the mesh
-        path = '/'.join(
-            ['shasta/assets', 'vehicles', 'arial_vehicle_abstract.urdf'])
+        path = '/'.join(['./assets', 'vehicles', 'arial_vehicle_abstract.urdf'])
         self.object = self.physics_client.loadURDF(
             path,
             self.init_pos,
@@ -47,33 +46,36 @@ class UaV(BaseActor):
         )
         # Constraint
         self.constraint = self.physics_client.createConstraint(
-            self.object, -1, -1, -1, self.physics_client.JOINT_FIXED,
-            [0, 0, 0], [0, 0, 0], self.init_pos)
+            self.object,
+            -1,
+            -1,
+            -1,
+            self.physics_client.JOINT_FIXED,
+            [0, 0, 0],
+            [0, 0, 0],
+            self.init_pos,
+        )
 
         # Change color depending on team type
-        self.physics_client.changeVisualShape(self.object,
-                                              -1,
-                                              rgbaColor=[0, 0, 1, 1])
+        self.physics_client.changeVisualShape(self.object, -1, rgbaColor=[0, 0, 1, 1])
         return None
 
     def get_pos_and_orientation(self):
-        """Returns the position and orientation (as Yaw angle) of the robot.
-        """
-        pos, rot = self.physics_client.getBasePositionAndOrientation(
-            self.object)
+        """Returns the position and orientation (as Yaw angle) of the robot."""
+        pos, rot = self.physics_client.getBasePositionAndOrientation(self.object)
         euler = self.physics_client.getEulerFromQuaternion(rot)
         return np.array(pos), euler
 
     def reset(self):
-        """Moves the robot back to its initial position
-        """
+        """Moves the robot back to its initial position"""
         self.physics_client.changeConstraint(self.constraint, self.init_pos)
         self.current_pos = self.init_pos
         self.desired_pos = self.init_pos
         return None
 
     def get_observation(self):
-        return 0
+        pos, orientation = self.get_pos_and_orientation()
+        return pos
 
     def apply_action(self, position):
         """This function moves the vehicles to given position

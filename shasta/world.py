@@ -1,7 +1,7 @@
 import numpy as np
 
 
-class World():
+class World:
     def __init__(self, config):
         super(World, self).__init__()
         # Need to specify some parameters
@@ -24,16 +24,20 @@ class World():
 
         if self.physics_client is not None:
             self.physics_client.loadURDF(
-                read_path, [0, 0, 0],
+                read_path,
+                [0, 0, 0],
                 self.physics_client.getQuaternionFromEuler([np.pi / 2, 0, 0]),
                 flags=self.physics_client.URDF_USE_MATERIAL_COLORS_FROM_MTL,
-                useFixedBase=True)
+                useFixedBase=True,
+            )
 
-    def change_camera_position(self,
-                               camera_distance=150.0,
-                               camera_yaw=0.0,
-                               camera_pitch=-89.999,
-                               camera_target_position=[0, 30, 0]):
+    def change_camera_position(
+        self,
+        camera_distance=150.0,
+        camera_yaw=0.0,
+        camera_pitch=-89.999,
+        camera_target_position=[0, 30, 0],
+    ):
         """Change the world camera position
 
         Parameters
@@ -60,7 +64,8 @@ class World():
             cameraDistance=camera_distance,
             cameraYaw=camera_yaw,
             cameraPitch=camera_pitch,
-            cameraTargetPosition=camera_target_position)
+            cameraTargetPosition=camera_target_position,
+        )
         return None
 
     def spawn_actor(self, actor, spawn_point):

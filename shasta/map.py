@@ -7,16 +7,24 @@ import osmnx as ox
 import pandas as pd
 import networkx as nx
 
-from .assets import assets_root
+import os
+
+from shasta.preprocessing.utils import extract_building_info
+
+# Import assests
+directories = list(filter(os.path.isdir, os.listdir(os.getcwd())))
+if 'assets' in directories:
+    assets_root = os.path.join('.', 'assets')
+else:
+    raise FileNotFoundError("Assests folder is not found under root directory")
 
 
-class Map():
+class Map:
     def __init__(self) -> None:
         return None
 
     def _affine_transformation_and_graph(self):
-        """Performs initial conversion of the lat lon to cartesian
-        """
+        """Performs initial conversion of the lat lon to cartesian"""
         # Graph
         read_path = self.asset_path + '/map.osm'
         G = ox.graph_from_xml(read_path, simplify=True, bidirectional='walk')
@@ -35,44 +43,9 @@ class Map():
 
         return None
 
-    def _setup_buildings(self):
-        """Perfrom initial building setup.
-        """
-        read_path = self.asset_path + '/buildings.csv'
-
-        # Check if building information is already generated
-        if Path(read_path).is_file():
-            buildings = pd.read_csv(read_path)
-        else:
-            read_path = self.asset_path + '/map.osm'
-            G = ox.graph_from_xml(read_path)
-            # TODO: This method doesn't work if the building info is not there in OSM
-            nodes, streets = ox.graph_to_gdfs(G)
-
-            west, north, east, south = nodes.geometry.total_bounds
-            polygon = ox.utils_geo.bbox_to_poly(north, south, east, west)
-            gdf = ox.geometries.geometries_from_polygon(
-                polygon, tags={'building': True})
-            buildings_proj = ox.project_gdf(gdf)
-
-            # Save the dataframe representing buildings
-            buildings = pd.DataFrame()
-            buildings['lon'] = gdf['geometry'].centroid.x
-            buildings['lat'] = gdf['geometry'].centroid.y
-            buildings['area'] = buildings_proj.area
-            buildings['perimeter'] = buildings_proj.length
-            try:
-                buildings['height'] = buildings_proj['height']
-            except KeyError:
-                buildings['height'] = 10  # assumption
-            buildings['id'] = np.arange(len(buildings_proj))
-
-            # Save the building info
-            save_path = self.asset_path + '/buildings.csv'
-            buildings.to_csv(save_path, index=False)
-
-        self.buildings = buildings
-        return None
+    def _setup_building_info(self):
+        read_path = self.asset_path + '/map.osm'
+        self.buildings = extract_building_info(read_path, save_fig=False)
 
     def setup(self, experiment_config):
         """Perform the initial experiment setup e.g., loading the map
@@ -96,11 +69,13 @@ class Map():
         # Read path for ths assets
         try:
             self.asset_path = '/'.join(
-                [assets_root, self.experiment_config['map_to_use']])
+                [assets_root, self.experiment_config['map_to_use']]
+            )
         except FileNotFoundError:
             try:
                 self.asset_path = '/'.join(
-                    [assets_root, self.experiment_config['map_to_use']])
+                    [assets_root, self.experiment_config['map_to_use']]
+                )
             except FileNotFoundError:
                 raise FileNotFoundError(
                     f"Please verify the {self.experiment_config['map_to_use']} is available in asset folder"
@@ -108,7 +83,7 @@ class Map():
 
         # Initialize the assests
         self._affine_transformation_and_graph()
-        self._setup_buildings()
+        self._setup_building_info()
         return None
 
     def get_affine_transformation_and_graph(self):
@@ -163,7 +138,7 @@ class Map():
         lat_lon = np.dot(point, np.linalg.inv(self.A))
         return lat_lon
 
-    def convert_from_lat_lon(self, point):
+    def convert_to_cartesian(self, point):
         """Convert a lat lon co-ordinates to cartesian coordinates
 
         Parameters
@@ -180,18 +155,18 @@ class Map():
 
     def get_building_info(self, building_index):
         """Get the information about a building such as perimeter,
-            position, number of floors.
+        position, number of floors.
 
-            Parameters
-            ----------
-            id : int
-                Building ID
+        Parameters
+        ----------
+        id : int
+            Building ID
 
-            Returns
-            -------
-            dict
-                A dictionary containing all the information about the building.
-            """
+        Returns
+        -------
+        dict
+            A dictionary containing all the information about the building.
+        """
         return self.buildings.loc[self.buildings['id'] == building_index]
 
     def get_lat_lon_spawn_points(self, n_points=5):
@@ -251,8 +226,7 @@ class Map():
 
         cartesian_spawn_points = []
         for point in lat_lon_points:
-            cartesian_spawn_points.append(
-                np.dot([point[0], point[1], 1], self.A))
+            cartesian_spawn_points.append(np.dot([point[0], point[1], 1], self.A))
         return cartesian_spawn_points[0]
 
     def get_all_buildings(self):

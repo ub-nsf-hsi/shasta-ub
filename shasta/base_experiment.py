@@ -7,7 +7,7 @@ from future.utils import with_metaclass
 
 
 class BaseExperiment(with_metaclass(ABCMeta, object)):
-    def __init__(self, config, core):
+    def __init__(self, config, core, experiment_config=None, *args, **kargs):
         """The base experiment which other experiments should inherit
 
         Parameters
@@ -23,6 +23,7 @@ class BaseExperiment(with_metaclass(ABCMeta, object)):
         """
         self.config = config
         self.core = core
+        self.exp_config = experiment_config
 
         return None
 

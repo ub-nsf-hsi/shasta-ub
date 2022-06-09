@@ -7,6 +7,7 @@ class PathPlanning(object):
     """Path planner based on the skeleton of the image.
     Generates a spline path
     """
+
     def __init__(self, env_map):
         self.map = env_map
         self.A, self.G = self.map.get_affine_transformation_and_graph()
@@ -77,20 +78,17 @@ class PathPlanning(object):
         # TODO: Verify the implementation of nearest nodes
         if not isinstance(start, int):
             start_lat_lon = self.map.convert_to_lat_lon(start)
-            start = ox.distance.nearest_nodes(self.G,
-                                              X=start_lat_lon[1],
-                                              Y=start_lat_lon[0])
+            start = ox.distance.nearest_nodes(
+                self.G, X=start_lat_lon[1], Y=start_lat_lon[0]
+            )
         if not isinstance(end, int):
             end_lat_lon = self.map.convert_to_lat_lon(end)
-            end = ox.distance.nearest_nodes(self.G,
-                                            X=end_lat_lon[1],
-                                            Y=end_lat_lon[0])
+            end = ox.distance.nearest_nodes(self.G, X=end_lat_lon[1], Y=end_lat_lon[0])
 
         route = nx.shortest_path(self.G, start, end, weight='length')
         for u, v in zip(route[:-1], route[1:]):
             # if there are parallel edges, select the shortest in length
-            data = min(self.G.get_edge_data(u, v).values(),
-                       key=lambda d: d["length"])
+            data = min(self.G.get_edge_data(u, v).values(), key=lambda d: d["length"])
             if "geometry" in data:
                 # if geometry attribute exists, add all its coords to list
                 xs, ys = data["geometry"].xy
@@ -105,7 +103,8 @@ class PathPlanning(object):
         lat_lon = np.array((x, y)).T
         refined_points = self.linear_refine_implicit(lat_lon, n=n_splits)
         refined_points = np.hstack(
-            (refined_points, np.ones((refined_points.shape[0], 1))))
+            (refined_points, np.ones((refined_points.shape[0], 1)))
+        )
 
         # Exchange x and y as they are reversed in pybullet
         refined_points[:, [1, 0]] = refined_points[:, [0, 1]]

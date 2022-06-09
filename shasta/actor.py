@@ -3,8 +3,8 @@ from future.utils import with_metaclass
 
 
 class BaseActor(with_metaclass(ABCMeta, object)):
-    """This the base class for single UGV robot
-    """
+    """This the base class for single UGV robot"""
+
     physics_client = None
     _loaded = False
 
@@ -39,8 +39,7 @@ class BaseActor(with_metaclass(ABCMeta, object)):
 
     @abstractmethod
     def load_asset(self, *args, **kwargs):
-        """Load the assests of the actor.
-        """
+        """Load the assests of the actor."""
         raise NotImplementedError
 
     @abstractmethod

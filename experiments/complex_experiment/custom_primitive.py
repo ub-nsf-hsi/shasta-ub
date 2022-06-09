@@ -3,7 +3,7 @@ import numpy as np
 from shasta.primitives import PathPlanning, Formation
 
 
-class FormationWithPlanning():
+class FormationWithPlanning:
     def __init__(self, env_map) -> None:
         self.planning = PathPlanning(env_map)
         self.formation = Formation()
@@ -13,8 +13,7 @@ class FormationWithPlanning():
         self.centroid = None
 
     def get_centroid(self, vehicles):
-        """Get the centroid of the vehicles
-        """
+        """Get the centroid of the vehicles"""
         centroid = []
         if len(vehicles) > 1:
             for vehicle in vehicles:
@@ -31,8 +30,9 @@ class FormationWithPlanning():
 
         # Find the path
         if self.path_points is None:
-            self.path_points = self.planning.find_path(start=self.centroid,
-                                                       end=target_pos)
+            self.path_points = self.planning.find_path(
+                start=self.centroid, end=target_pos
+            )
 
         # Start executing the action
         self.next_pos = self.path_points[0]

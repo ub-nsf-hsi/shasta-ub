@@ -4,9 +4,10 @@ import time
 from utils import skip_run
 
 from shasta.env import ShastaEnv
+from shasta.preprocessing.utils import extract_building_info
 
 from experiments.simple_experiment import SimpleExperiment
-from experiments.primitive_experiment import PrimitiveExperiment
+from experiments.complex_experiment import SearchingExperiment
 from experiments.actor_groups import create_actor_groups
 
 config_path = 'config/simulation_config.yml'
@@ -23,13 +24,24 @@ with skip_run('skip', 'Test New Framework') as check, check():
         env.step(0)
         time.sleep(0.01)
 
-with skip_run('run', 'Test Experiment Framework') as check, check():
+with skip_run('skip', 'Test Experiment Framework') as check, check():
 
     actor_groups = create_actor_groups()
-    config['experiment']['type'] = PrimitiveExperiment
+
+    # Setup experiment
+    exp_config_path = 'experiments/complex_experiment/complex_experiment_config.yml'
+    exp_config = yaml.load(open(str(exp_config_path)), Loader=yaml.SafeLoader)
+    config['experiment']['type'] = SearchingExperiment
+    config['experiment']['config'] = exp_config
+
     env = ShastaEnv(config, actor_groups=actor_groups)
 
     for i in range(50000):
         observation, reward, done, info = env.step(0)
-        if all(done):
+        if done:
             break
+
+with skip_run('skip', 'Test Building') as check, check():
+
+    osm_path = 'assets/buffalo-small/map.osm'
+    extract_building_info(osm_path, save_fig=False)

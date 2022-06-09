@@ -1,11 +1,23 @@
+from collections import defaultdict
+
 from shasta.base_experiment import BaseExperiment
 
 from .custom_primitive import FormationWithPlanning
+from .states import StatesExtractor
 
 
-class PrimitiveExperiment(BaseExperiment):
-    def __init__(self, config, core):
-        super().__init__(config, core)
+def group_actors_by_type(actor_groups):
+    actor_type = defaultdict(list)
+    for key, value in sorted(actor_groups.items()):
+        actor_type[value[0].type].extend(value)
+    return actor_type
+
+
+class SearchingExperiment(BaseExperiment):
+    def __init__(self, config, core, experiment_config=None, *args, **kargs):
+        super().__init__(config, core, experiment_config, *args, **kargs)
+
+        self.state_extractor = StatesExtractor(experiment_config, core)
 
         # Primitive setup
         self.actions = {}
@@ -50,11 +62,21 @@ class PrimitiveExperiment(BaseExperiment):
         as well as a variable with additional information about such observation.
         The information variable can be empty
         """
-        return None, {}
+        actor_groups = core.get_actor_groups()
+        grouped_by_type = group_actors_by_type(actor_groups)
+        states = self.state_extractor.get_state(
+            grouped_by_type['uav'], grouped_by_type['ugv']
+        )
+        return states, {}
 
     def get_done_status(self, observation, core):
         """Returns whether or not the experiment has to end"""
-        return self.dones
+        actor_groups = core.get_actor_groups()
+        grouped_by_type = group_actors_by_type(actor_groups)
+        done = self.state_extractor.update_progrees(
+            grouped_by_type['uav'], grouped_by_type['ugv']
+        )
+        return done
 
     def compute_reward(self, observation, core):
         """Computes the reward"""

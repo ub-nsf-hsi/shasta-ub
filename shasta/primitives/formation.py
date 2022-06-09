@@ -4,9 +4,10 @@ import osmnx as ox
 
 
 class Formation(object):
-    """ Formation control primitive using region based shape control.
+    """Formation control primitive using region based shape control.
     Coded by: Apurvakumar Jani, Date: 18/9/2019
     """
+
     def __init__(self, config=None):
         # Initialise the parameters
         self.a = 5
@@ -18,8 +19,9 @@ class Formation(object):
         self.dt = 1.0
         return None
 
-    def calculate_vel(self, vehicle, dt, all_drones_pos, centroid_pos,
-                      path_vel, vmax, formation_type):
+    def calculate_vel(
+        self, vehicle, dt, all_drones_pos, centroid_pos, path_vel, vmax, formation_type
+    ):
         """Calculate the vehicle velocity depending on the position of the peer vehicles
 
         Parameters
@@ -52,13 +54,16 @@ class Formation(object):
         # Calculate the velocity of each neighboor particle
         k = 1 / self.knn  # constant
         g_lij = (self.min_dis**2) - np.linalg.norm(
-            curr_pos - peers_pos, axis=1, ord=2)
+            curr_pos - peers_pos, axis=1, ord=2
+        )
         del_g_ij = 2 * (peers_pos - curr_pos)
-        P_ij = k * np.dot(
-            np.maximum(0, g_lij / (self.min_dis**2))**2, del_g_ij)
-        f_g_ij = np.linalg.norm(
-            (curr_pos - centroid_pos[0:2]) / np.array([self.a, self.b]),
-            ord=2) - 1
+        P_ij = k * np.dot(np.maximum(0, g_lij / (self.min_dis**2)) ** 2, del_g_ij)
+        f_g_ij = (
+            np.linalg.norm(
+                (curr_pos - centroid_pos[0:2]) / np.array([self.a, self.b]), ord=2
+            )
+            - 1
+        )
 
         # Calculate path velocity
         kl = 1  # constant
@@ -91,8 +96,7 @@ class Formation(object):
             Time step to be used for distance calculation
         """
         vmax = vehicles[0].speed
-        all_drones_pos = np.asarray(
-            [vehicle.current_pos[0:2] for vehicle in vehicles])
+        all_drones_pos = np.asarray([vehicle.current_pos[0:2] for vehicle in vehicles])
 
         # Path velocity
         path = np.array([next_pos[0], next_pos[1]]) - centroid_pos[0:2]
@@ -105,11 +109,21 @@ class Formation(object):
         # TODO: Need to find an efficient way to implement formation control
         vehicles, speed = map(
             list,
-            zip(*[
-                self.calculate_vel(vehicle, self.dt, all_drones_pos,
-                                   centroid_pos, path_vel, vmax,
-                                   formation_type) for vehicle in vehicles
-            ]))
+            zip(
+                *[
+                    self.calculate_vel(
+                        vehicle,
+                        self.dt,
+                        all_drones_pos,
+                        centroid_pos,
+                        path_vel,
+                        vmax,
+                        formation_type,
+                    )
+                    for vehicle in vehicles
+                ]
+            ),
+        )
         if np.max(speed) < 0.015 * len(all_drones_pos):
             formation_done = True
         else:

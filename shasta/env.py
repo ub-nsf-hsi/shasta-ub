@@ -14,6 +14,7 @@ class ShastaEnv(gym.Env):
     """
     This is a shasta environment, responsible of handling all the SHASTA related steps of the training.
     """
+
     def __init__(self, config, actor_groups: dict = None):
         """Initializes the environment"""
         self.config = config
@@ -26,8 +27,14 @@ class ShastaEnv(gym.Env):
         self.core = ShastaCore(self.config, actor_groups=actor_groups)
         self.core.setup_experiment(self.config["experiment"])
 
+        # Setup the experiment
+        try:
+            experiment_config = self.config["experiment"]["config"]
+        except KeyError:
+            experiment_config = None
         self.experiment = self.config["experiment"]["type"](
-            self.config["experiment"], self.core)
+            self.config["experiment"], self.core, experiment_config
+        )
 
         if not self.experiment:
             raise Exception(
@@ -62,8 +69,7 @@ class ShastaEnv(gym.Env):
         self.experiment.apply_actions(action, self.core)
         raw_data = self.core.tick()
 
-        observation, info = self.experiment.get_observation(
-            raw_data, self.core)
+        observation, info = self.experiment.get_observation(raw_data, self.core)
         done = self.experiment.get_done_status(observation, self.core)
         reward = self.experiment.compute_reward(observation, self.core)
 

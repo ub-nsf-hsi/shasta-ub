@@ -13,19 +13,18 @@ from .utils import get_initial_positions
 
 def kill_all_servers():
     """Kill all PIDs that start with Carla"""
-    processes = [
-        p for p in psutil.process_iter() if "carla" in p.name().lower()
-    ]
+    processes = [p for p in psutil.process_iter() if "carla" in p.name().lower()]
     for process in processes:
         os.kill(process.pid, signal.SIGKILL)
 
 
-class ShastaCore():
+class ShastaCore:
     """
     Class responsible of handling all the different CARLA functionalities,
     such as server-client connecting, actor spawning,
     and getting the sensors data.
     """
+
     def __init__(self, config, actor_groups: dict = None):
         """Initialize the server and client"""
         self.config = config
@@ -35,8 +34,8 @@ class ShastaCore():
         if not isinstance(self.actor_groups, dict):
             raise TypeError('Actor groups should be of type dict')
 
+        # Setup world and map
         self.world = World(config)
-        # Setup the map
         self.map = Map()
 
         self.init_server()
@@ -54,8 +53,9 @@ class ShastaCore():
             self.physics_client = bc.BulletClient(connection_mode=p.DIRECT)
         else:
             options = '--background_color_red=0.85 --background_color_green=0.85 --background_color_blue=0.85'  # noqa
-            self.physics_client = bc.BulletClient(connection_mode=p.GUI,
-                                                  options=options)
+            self.physics_client = bc.BulletClient(
+                connection_mode=p.GUI, options=options
+            )
 
             # Set the camera parameters
             self.camer_distance = 150.0
@@ -66,10 +66,12 @@ class ShastaCore():
                 cameraDistance=self.camer_distance,
                 cameraYaw=self.camera_yaw,
                 cameraPitch=self.camera_pitch,
-                cameraTargetPosition=self.camera_target_position)
+                cameraTargetPosition=self.camera_target_position,
+            )
 
             self.physics_client.configureDebugVisualizer(
-                self.physics_client.COV_ENABLE_GUI, 0)
+                self.physics_client.COV_ENABLE_GUI, 0
+            )
 
         # Set gravity
         self.physics_client.setGravity(0, 0, -9.81)
@@ -78,7 +80,8 @@ class ShastaCore():
         self.physics_client.setPhysicsEngineParameter(
             fixedTimeStep=self.config['time_step'] / 10,
             numSubSteps=1,
-            numSolverIterations=5)
+            numSolverIterations=5,
+        )
 
         # Inject physics client
         if self.world.physics_client is None:
@@ -160,14 +163,14 @@ class ShastaCore():
 
             # Spawn the actors
             spawn_point = self.map.get_cartesian_spawn_points()
-            positions = get_initial_positions(spawn_point, 10,
-                                              len(self.actor_groups[group_id]))
+            positions = get_initial_positions(
+                spawn_point, 10, len(self.actor_groups[group_id])
+            )
             for actor, position in zip(self.actor_groups[group_id], positions):
                 if actor.init_pos is None:
                     actor.init_pos = position
                 else:
-                    actor.init_pos = self.map.convert_from_lat_lon(
-                        actor.init_pos)
+                    actor.init_pos = self.map.convert_to_cartesian(actor.init_pos)
 
                 self.world.spawn_actor(actor, position)
 
@@ -215,6 +218,5 @@ class ShastaCore():
         return observations
 
     def close_simulation(self):
-        """Close the simulation
-        """
+        """Close the simulation"""
         p.disconnect(self.physics_client._client)
