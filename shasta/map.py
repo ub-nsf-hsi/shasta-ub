@@ -119,6 +119,7 @@ class Map:
         dict
             A dictionary containing all the information about the node.
         """
+
         return self.node_graph.nodes[node_index]
 
     def convert_to_lat_lon(self, point):
