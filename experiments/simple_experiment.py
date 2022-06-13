@@ -38,7 +38,6 @@ class SimpleExperiment(BaseExperiment):
         as well as a variable with additional information about such observation.
         The information variable can be empty
         """
-        print(observation)
         return None, {}
 
     def get_done_status(self, observation, core):
