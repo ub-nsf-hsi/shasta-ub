@@ -43,7 +43,6 @@ class TargetManager:
         )
 
         self.targets = targets_info.to_dict('records')
-
         return None
 
     def get_target_info(self, id):
