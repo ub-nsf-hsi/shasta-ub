@@ -4,7 +4,8 @@ from shasta.base_experiment import BaseExperiment
 
 from .custom_primitive import FormationWithPlanning
 from .states import StatesExtractor
-from .action1 import ActionDecoder
+from .actions import SimpleActionDecoder
+
 
 def group_actors_by_type(actor_groups):
     actor_type = defaultdict(list)
@@ -18,7 +19,7 @@ class SearchingExperiment(BaseExperiment):
         super().__init__(config, core, experiment_config, *args, **kargs)
 
         self.state_extractor = StatesExtractor(experiment_config, core)
-        self.actions_decoder = ActionDecoder(experiment_config)
+        self.actions_decoder = SimpleActionDecoder(experiment_config)
 
         # Primitive setup
         self.actions = {}
@@ -47,13 +48,13 @@ class SearchingExperiment(BaseExperiment):
 
         :param action: value outputted by the policy
         to apply action we need the pareto points of each vehicle. we get that from states.py
-        
+
         """
-        paretos= self.state_extractor.get_pareto_node()
+        paretos = self.state_extractor.get_pareto_node()
+        print(paretos)
         decoded_action = self.actions_decoder.get_action(actions, paretos)
-        #in decoded action we get the nodes to be visited by each vehicle - first 3 UAVs and next 3 UGVs
-        #decode the action first then apply the actions to the vehicles
-        
+        # in decoded action we get the nodes to be visited by each vehicle - first 3 UAVs and next 3 UGVs
+        # decode the action first then apply the actions to the vehicles
 
     def get_observation(self, observation, core):
         """Function to do all the post processing of observations (sensor data).
@@ -65,7 +66,6 @@ class SearchingExperiment(BaseExperiment):
         The information variable can be empty
         """
         actor_groups = core.get_actor_groups()
-
         grouped_by_type = group_actors_by_type(actor_groups)
         states = self.state_extractor.get_state(
             grouped_by_type['uav'], grouped_by_type['ugv']
