@@ -54,7 +54,7 @@ class ShastaEnv(gym.Env):
         [type]
             [description]
         """
-        self.experiment.reset()
+        self.experiment.reset(self.core)
 
         # Tick once and get the observations
         raw_data = self.core.reset()

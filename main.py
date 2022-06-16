@@ -36,11 +36,13 @@ with skip_run('run', 'Test Experiment Framework') as check, check():
     config['experiment']['config'] = exp_config
 
     env = ShastaEnv(config, actor_groups=actor_groups)
-
-    for i in range(2000):
-        observation, reward, done, info = env.step([0, 0, 0, 0, 0, 0])
-        if all(done):
-            break
+    
+    # Steps in the environment
+    observation, reward, done, info = env.step([0, 0, 0, 0, 0, 0])
+    observation, reward, done, info = env.step([4, 1, 2, 2, 3, 0])
+    
+    # Check reset
+    env.reset()
 
 with skip_run('skip', 'Test Building') as check, check():
 

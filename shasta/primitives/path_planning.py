@@ -81,6 +81,7 @@ class PathPlanning(object):
             start = ox.distance.nearest_nodes(
                 self.G, X=start_lat_lon[1], Y=start_lat_lon[0]
             )
+
         if not isinstance(end, (int, np.int64)):
             end_lat_lon = self.map.convert_to_lat_lon(end)
             end = ox.distance.nearest_nodes(self.G, X=end_lat_lon[1], Y=end_lat_lon[0])

@@ -1,7 +1,7 @@
 import numpy as np
 
 from shasta.primitives import PathPlanning, Formation
-
+import time
 
 class FormationWithPlanning:
     def __init__(self, env_map) -> None:
@@ -26,21 +26,23 @@ class FormationWithPlanning:
     def execute(self, vehicles, target_pos):
 
         # Get centroid and find the shortest path
+        
         self.centroid = self.get_centroid(vehicles)
-
+        
         # Find the path
         if self.path_points is None:
             self.path_points = self.planning.find_path(
                 start=self.centroid, end=target_pos
             )
-
         # Start executing the action
-        self.next_pos = self.path_points[0]
-        self.formation.execute(vehicles, self.next_pos, self.centroid, 'solid')
-
+        if len(self.path_points>0):
+            self.next_pos = self.path_points[0]
+            self.formation.execute(vehicles, self.next_pos, self.centroid, 'solid')
         # Update the path points
-        self.update_path_points()
 
+        self.update_path_points()
+        done = self.get_done_status()
+        
         return self.get_done_status()
 
     def update_path_points(self):
@@ -50,7 +52,9 @@ class FormationWithPlanning:
             self.path_points = np.delete(self.path_points, 0, 0)
 
     def get_done_status(self):
-        if len(self.path_points) <= 2:
+        if len(self.path_points) <= 1:
             return True
         else:
             return False
+        
+
