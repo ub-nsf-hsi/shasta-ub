@@ -71,8 +71,8 @@ class SearchingExperiment(BaseExperiment):
             core.tick()
 
             if all(self.actions_done):
-                for i in range(6):
-                    self.actions[i].path_points=None
+                for group_id in actor_groups.keys():
+                    self.actions[group_id].path_points=None
                 break
 
     def get_observation(self, observation, core):
@@ -99,13 +99,7 @@ class SearchingExperiment(BaseExperiment):
 
     def get_done_status(self, observation, core):
         """Returns whether or not the experiment has to end"""
-        actor_groups = core.get_actor_groups()
-        grouped_by_type = group_actors_by_type(actor_groups)
-        done = self.state_extractor.update_progrees(
-            grouped_by_type['uav'], grouped_by_type['ugv']
-        )
-
-        return done
+        return self.actions_done
 
     def compute_reward(self, observation, core):
         """Computes the reward"""

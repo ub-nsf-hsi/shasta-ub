@@ -5,7 +5,7 @@ current_time: 0
 use_real_time: False
 time_step: 1.0
 headless: False
-dynamic: True
+dynamic: False
 
 ##---------------------------------------------------------------------##
 experiment:
