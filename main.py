@@ -26,6 +26,7 @@ with skip_run('skip', 'Test New Framework') as check, check():
 
 with skip_run('run', 'Test Experiment Framework') as check, check():
 
+    # Create actor groups
     actor_groups = create_actor_groups()
 
     # Setup experiment
@@ -36,8 +37,8 @@ with skip_run('run', 'Test Experiment Framework') as check, check():
 
     env = ShastaEnv(config, actor_groups=actor_groups)
 
-    for i in range(1):
-        observation, reward, done, info = env.step([0,0,0,0,0,0])
+    for i in range(2000):
+        observation, reward, done, info = env.step([0, 0, 0, 0, 0, 0])
         if done:
             break
 

@@ -210,6 +210,24 @@ class Map:
         cartesian_pos = np.dot([lat, lon, 1], self.A)
         return cartesian_pos
 
+    def get_cartesian_node_position(self, node_index):
+        """Get the lat and lon given the node index
+
+        Parameters
+        ----------
+        node_index : int
+            The node index in the map
+
+        Returns
+        -------
+        array
+            The cartesian co-ordinates
+        """
+        node_info = self.get_node_info(node_index=node_index)
+        lat = node_info['y']
+        lon = node_info['x']
+        return [lat, lon]
+
     def get_cartesian_spawn_points(self, n_points=5):
         """Get the cartesian spawn points
 
