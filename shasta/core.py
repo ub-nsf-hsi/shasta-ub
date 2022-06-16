@@ -148,9 +148,7 @@ class ShastaCore:
             for actor in self.actor_groups[group_id]:
                 # Reset the actor and collect the observation
                 actor.reset()
-                obs_from_each_actor.append(actor.get_observation)
-
-            observations[group_id] = obs_from_each_actor
+        observations = self.tick()
 
         return observations
 

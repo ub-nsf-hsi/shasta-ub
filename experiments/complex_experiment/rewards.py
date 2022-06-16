@@ -1,10 +1,13 @@
 import numpy as np
 
 
+
+
 class Reward:
-    def __init__(self, config):
+    def __init__(self, config, target_manager):
         super(Reward, self).__init__()
         self.config = config
+        self.target_manager= target_manager
 
     def get_time_dist(self, vehicle, target_pos):
         """Calculated the information of probable goal building
@@ -49,13 +52,13 @@ class Reward:
             progress, and probability
         """
         # Read from co-ordinate file
-        node_info = self.target_info(goal_id)
+        node_info = self.target_manager.get_target_info(goal_id)
         info = {}
-        info['goal_position'] = node_info['position']
+        loc = self.target_manager.get_node_info(goal_id)
+        info['goal_position'] = [loc["x"],loc["y"]]
         info['perimeter'] = node_info['perimeter']
-        info['floors'] = node_info['n_floors']
-        info['goal_progress'] = 0
-        info['goal_probability'] = 0
+        info['goal_progress'] = node_info["progress_goals"]
+        info['goal_probability'] = node_info["probability_goals"]
         return info
 
     def mission_reward(self, ugv, uav, config):
@@ -130,9 +133,8 @@ class Reward:
         w_search = self.config['weights']['w_search']
         # mission_success = self.config['weights']['mission_success']
         r_search = 0
-        for target in self.target:
+        
+        for target in self.target_manager.targets:
             r_search += w_search * target['progress_goals']
-
-        reward = r_ugv_time + r_ugv_ammo + r_uav_time + r_uav_battery + r_search
-
+        reward = r_ugv_time  + r_uav_time  + r_search
         return reward

@@ -36,10 +36,19 @@ with skip_run('run', 'Test Experiment Framework') as check, check():
 
     env = ShastaEnv(config, actor_groups=actor_groups)
 
-    for i in range(1):
-        observation, reward, done, info = env.step([0,0,0,0,0,0])
-        if done:
-            break
+    
+    observation, reward, done, info = env.step([0, 0, 0, 0, 0, 0])
+    
+    print("##############################################################################################")
+    
+    observation, reward, done, info = env.step([4, 1, 2, 2, 3, 0])
+    env.reset()
+    print("##############################################################################################")
+    
+    observation, reward, done, info = env.step([1, 1, 1, 1, 0, 0])
+    
+    env.reset()
+
 
 with skip_run('skip', 'Test Building') as check, check():
 

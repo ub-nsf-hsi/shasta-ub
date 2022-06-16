@@ -14,6 +14,7 @@ class TargetManager:
         self._initial_target_setup()
 
     def _initial_mission_setup(self):
+
         self.goal = self.config['simulation']['goal_node']
         self.progress_reward = self.config['reward']['progress_reward']
         self.indoor_reward = 2 * self.progress_reward

@@ -6,7 +6,9 @@ import numpy as np
 from sklearn.cluster import KMeans
 
 from .target import TargetManager
-
+#kmeans warning 
+import warnings
+warnings.filterwarnings('ignore')
 
 def cluster(vehicles, n_clusters, config):
     """Performs k-means clustering on the given vehicle data.
@@ -194,10 +196,10 @@ def flatten_state_list(lists):
 
 
 class StatesExtractor:
-    def __init__(self, config, core):
+    def __init__(self, config, core,target_manager):
         self.current_time = 0
         self.config = config
-        self.target_manager = TargetManager(config, core)
+        self.target_manager = target_manager
         self.map = core.get_map()
         self.pareto_nodes = None
 

@@ -135,6 +135,7 @@ class Map:
         lat_lon : array
             The lat lon co-ordinates
         """
+
         point[2] = 1
         lat_lon = np.dot(point, np.linalg.inv(self.A))
         return lat_lon
@@ -192,13 +193,11 @@ class Map:
         return points
 
     def get_cartesian_node_position(self, node_index):
-        """Get the cartesian co-ordinates given the node index
-
+        """Get the lat and lon given the node index
         Parameters
         ----------
         node_index : int
             The node index in the map
-
         Returns
         -------
         array
@@ -207,9 +206,9 @@ class Map:
         node_info = self.get_node_info(node_index=node_index)
         lat = node_info['y']
         lon = node_info['x']
-        cartesian_pos = np.dot([lat, lon, 1], self.A)
-        return cartesian_pos
-
+        return [lat, lon]
+    
+    
     def get_cartesian_spawn_points(self, n_points=5):
         """Get the cartesian spawn points
 
