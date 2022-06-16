@@ -66,6 +66,8 @@ class SearchingExperiment(BaseExperiment):
             core.tick()
 
             if all(self.actions_done):
+                for group_id in actor_groups.keys():
+                    self.actions[group_id].path_points = None
                 break
 
     def get_observation(self, observation, core):
