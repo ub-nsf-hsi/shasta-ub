@@ -35,11 +35,12 @@ class FormationWithPlanning:
             )
 
         # Start executing the action
-        self.next_pos = self.path_points[0]
-        self.formation.execute(vehicles, self.next_pos, self.centroid, 'solid')
+        if len(self.path_points) > 0:
+            self.next_pos = self.path_points[0]
+            self.formation.execute(vehicles, self.next_pos, self.centroid, 'solid')
 
-        # Update the path points
-        self.update_path_points()
+            # Update the path points
+            self.update_path_points()
 
         return self.get_done_status()
 
@@ -50,7 +51,7 @@ class FormationWithPlanning:
             self.path_points = np.delete(self.path_points, 0, 0)
 
     def get_done_status(self):
-        if len(self.path_points) <= 2:
+        if len(self.path_points) <= 1:
             return True
         else:
             return False

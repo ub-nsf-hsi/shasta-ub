@@ -210,7 +210,7 @@ class Map:
         cartesian_pos = np.dot([lat, lon, 1], self.A)
         return cartesian_pos
 
-    def get_cartesian_node_position(self, node_index):
+    def get_lat_lon_node_position(self, node_index):
         """Get the lat and lon given the node index
 
         Parameters

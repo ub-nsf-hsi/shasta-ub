@@ -11,7 +11,7 @@ simulation:
   n_nodes: 53
   n_targets: 3
   goal_node: [39]
-  target_building_id: [38, 39, 40]
+  target_building_id: [10, 39, 20]
   n_ugv: 25
   n_uav: 75
   n_uav_clusters: 3

@@ -1,6 +1,7 @@
 import numpy as np
 
 from shasta.actor import BaseActor
+import copy
 
 
 class UaV(BaseActor):
@@ -15,8 +16,8 @@ class UaV(BaseActor):
         # Properties UAV
         self.init_pos = None
         self.init_orientation = None
-        self.current_pos = self.init_pos
-        self.desired_pos = self.init_pos
+        self.current_pos = copy.deepcopy(self.init_pos)
+        self.desired_pos = copy.deepcopy(self.init_pos)
 
         # Extra parameters
         self.idle = True
@@ -69,8 +70,8 @@ class UaV(BaseActor):
     def reset(self):
         """Moves the robot back to its initial position"""
         self.physics_client.changeConstraint(self.constraint, self.init_pos)
-        self.current_pos = self.init_pos
-        self.desired_pos = self.init_pos
+        self.current_pos = copy.deepcopy(self.init_pos)
+        self.desired_pos = copy.deepcopy(self.init_pos)
         return None
 
     def get_observation(self):

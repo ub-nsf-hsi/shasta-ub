@@ -138,21 +138,17 @@ class ShastaCore:
         """This function resets / spawns the hero vehicle and its sensors"""
 
         # Reset all the actors
-        observations = {}
         for group_id in self.actor_groups:
             # Check if the entry is a list or not
             if not isinstance(self.actor_groups[group_id], list):
                 self.actor_groups[group_id] = [self.actor_groups[group_id]]
 
-            obs_from_each_actor = []
             for actor in self.actor_groups[group_id]:
                 # Reset the actor and collect the observation
+                print(actor.init_pos)
                 actor.reset()
-                obs_from_each_actor.append(actor.get_observation)
 
-            observations[group_id] = obs_from_each_actor
-
-        return observations
+        return None
 
     def spawn_actors(self):
         """Spawns vehicles and walkers, also setting up the Traffic Manager and its parameters"""
