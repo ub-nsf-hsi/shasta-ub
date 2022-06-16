@@ -53,14 +53,20 @@ class SearchingExperiment(BaseExperiment):
         paretos = self.state_extractor.get_pareto_node()
         decoded_action = self.actions_decoder.get_action(actions, paretos)
 
-        # Get groups
-        actor_groups = core.get_actor_groups()
+        # Run until the UAVs and UGVs reach the building
+        while True:
+            actor_groups = core.get_actor_groups()
+            self.actions_done = []
+            for group_id, action_args in decoded_action.items():
+                self.actions_done.append(
+                    self.actions[group_id].execute(actor_groups[group_id], action_args)
+                )
 
-        for group_id, action_args in decoded_action.items():
-            self.actions[group_id].execute(actor_groups[group_id], action_args)
+            # Step the simulation
+            core.tick()
 
-        # in decoded action we get the nodes to be visited by each vehicle - first 3 UAVs and next 3 UGVs
-        # decode the action first then apply the actions to the vehicles
+            if all(self.actions_done):
+                break
 
     def get_observation(self, observation, core):
         """Function to do all the post processing of observations (sensor data).
@@ -76,16 +82,17 @@ class SearchingExperiment(BaseExperiment):
         states = self.state_extractor.get_state(
             grouped_by_type['uav'], grouped_by_type['ugv']
         )
-        return states, {}
 
-    def get_done_status(self, observation, core):
-        """Returns whether or not the experiment has to end"""
-        actor_groups = core.get_actor_groups()
-        grouped_by_type = group_actors_by_type(actor_groups)
+        # Update progress
         done = self.state_extractor.update_progrees(
             grouped_by_type['uav'], grouped_by_type['ugv']
         )
-        return done
+
+        return states, {"searching_done": done}
+
+    def get_done_status(self, observation, core):
+        """Returns whether or not the experiment has to end"""
+        return self.actions_done
 
     def compute_reward(self, observation, core):
         """Computes the reward"""
