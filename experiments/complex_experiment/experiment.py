@@ -51,8 +51,14 @@ class SearchingExperiment(BaseExperiment):
 
         """
         paretos = self.state_extractor.get_pareto_node()
-        print(paretos)
         decoded_action = self.actions_decoder.get_action(actions, paretos)
+
+        # Get groups
+        actor_groups = core.get_actor_groups()
+
+        for group_id, action_args in decoded_action.items():
+            self.actions[group_id].execute(actor_groups[group_id], action_args)
+
         # in decoded action we get the nodes to be visited by each vehicle - first 3 UAVs and next 3 UGVs
         # decode the action first then apply the actions to the vehicles
 

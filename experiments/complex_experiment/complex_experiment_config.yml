@@ -4,7 +4,7 @@ simulation:
   total_time: 600
   current_time: 0
   time_step: 0.1
-  headless: True
+  headless: False
   collision_free: True
   episodes: 100
   n_buildings: 15
