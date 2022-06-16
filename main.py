@@ -39,7 +39,7 @@ with skip_run('run', 'Test Experiment Framework') as check, check():
 
     for i in range(2000):
         observation, reward, done, info = env.step([0, 0, 0, 0, 0, 0])
-        if done:
+        if all(done):
             break
 
 with skip_run('skip', 'Test Building') as check, check():
