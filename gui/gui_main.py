@@ -50,7 +50,7 @@ class MainGUI(pyglet.window.Window):
         path = '/'.join(
             [
                 config['urdf_data_path'],
-                config['simulation']['map_to_use'],
+                config['experiment']['map_to_use'],
                 'meshes/map.obj',
             ]
         )

@@ -10,6 +10,8 @@ from experiments.simple_experiment import SimpleExperiment
 from experiments.complex_experiment import SearchingExperiment
 from experiments.actor_groups import create_actor_groups
 
+from gui.gui_main import MainGUI
+
 config_path = 'config/simulation_config.yml'
 config = yaml.load(open(str(config_path)), Loader=yaml.SafeLoader)
 
@@ -46,3 +48,7 @@ with skip_run('skip', 'Test Building') as check, check():
 
     osm_path = 'assets/buffalo-small/map.osm'
     extract_building_info(osm_path, save_fig=False)
+
+with skip_run('skip', 'Test New GUI') as check, check():
+    gui = MainGUI(1200, 800, config)
+    gui.run()

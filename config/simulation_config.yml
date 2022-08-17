@@ -14,3 +14,8 @@ experiment:
   record_video: False
   log_states: False
   detailed_model: True
+
+##---------------------------------------------------------------------##
+# Paths
+urdf_data_path: 'assets'
+log_path: 'data/log/'
