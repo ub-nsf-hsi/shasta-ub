@@ -92,4 +92,6 @@ class UgV(BaseActor):
         return None
 
     def destroy(self):
-        self.physics_client.removeBody(self.object)
+        self.functional = False
+        if self.functional:
+            self.physics_client.removeBody(self.object)

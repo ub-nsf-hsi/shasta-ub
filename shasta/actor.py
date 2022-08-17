@@ -8,11 +8,11 @@ class BaseActor(with_metaclass(ABCMeta, object)):
     physics_client = None
     _loaded = False
 
-    def __init__(self):
+    def __init__(self, init_pos=None, init_orientation=None):
         self.states = {}
         self._actor_id = None
-        self.init_pos = None
-        self.init_orientation = None
+        self.init_pos = init_pos
+        self.init_orientation = init_orientation
 
     def _load(self):
         """Load object into pybullet and return list of loaded body ids."""

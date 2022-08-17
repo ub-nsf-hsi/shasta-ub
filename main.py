@@ -24,7 +24,7 @@ with skip_run('skip', 'Test New Framework') as check, check():
         env.step(0)
         time.sleep(0.01)
 
-with skip_run('run', 'Test Experiment Framework') as check, check():
+with skip_run('skip', 'Test Experiment Framework') as check, check():
 
     # Create actor groups
     actor_groups = create_actor_groups()

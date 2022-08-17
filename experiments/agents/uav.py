@@ -92,4 +92,5 @@ class UaV(BaseActor):
         return None
 
     def destroy(self):
+        self.functional = False
         self.physics_client.removeBody(self.object)
