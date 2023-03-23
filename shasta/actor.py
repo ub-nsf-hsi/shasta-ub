@@ -3,19 +3,20 @@ from future.utils import with_metaclass
 
 
 class BaseActor(with_metaclass(ABCMeta, object)):
-    """This the base class for single UGV robot"""
-
-    physics_client = None
-    _loaded = False
+    """This the base class for single UxV robot"""
 
     def __init__(self, init_pos=None, init_orientation=None):
         self.states = {}
         self._actor_id = None
         self.init_pos = init_pos
         self.init_orientation = init_orientation
+        self._loaded = False
 
-    def _load(self):
+    def _load(self, physics_client):
         """Load object into pybullet and return list of loaded body ids."""
+        # Save the physics client
+        self.physics_client = physics_client
+
         if self._loaded:
             raise ValueError("Cannot load an actor multiple times.")
         self._loaded = True

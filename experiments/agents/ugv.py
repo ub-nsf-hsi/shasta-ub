@@ -8,6 +8,8 @@ class UgV(BaseActor):
     """This the base class for single UGV robot"""
 
     def __init__(self, config=None):
+        super().__init__(config)
+
         # Platoon properties
         self.vehicle_id = 0
         self.platoon_id = 0

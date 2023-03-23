@@ -34,12 +34,13 @@ class ShastaCore:
         if not isinstance(self.actor_groups, dict):
             raise TypeError('Actor groups should be of type dict')
 
-        # Setup world and map
-        self.world = World(config)
-        self.map = Map()
-
+        # Setup the physics client
         self.init_server()
         self._setup_physics_client()
+
+        # Setup world and map
+        self.world = World(config, physics_client=self.physics_client)
+        self.map = Map()
 
     def _setup_physics_client(self):
         """Setup the physics client
@@ -75,17 +76,12 @@ class ShastaCore:
 
         # Set gravity
         self.physics_client.setGravity(0, 0, -9.81)
-
         # Set parameters for simulation
         self.physics_client.setPhysicsEngineParameter(
             fixedTimeStep=self.config['time_step'] / 10,
             numSubSteps=1,
             numSolverIterations=5,
         )
-
-        # Inject physics client
-        if self.world.physics_client is None:
-            self.world.physics_client = self.physics_client
 
         return None
 
@@ -145,7 +141,6 @@ class ShastaCore:
 
             for actor in self.actor_groups[group_id]:
                 # Reset the actor and collect the observation
-                print(actor.init_pos)
                 actor.reset()
 
         return None
@@ -215,4 +210,4 @@ class ShastaCore:
 
     def close_simulation(self):
         """Close the simulation"""
-        p.disconnect(self.physics_client._client)
+        self.physics_client.__del__()

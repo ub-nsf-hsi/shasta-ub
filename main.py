@@ -28,21 +28,22 @@ with skip_run('skip', 'Test New Framework') as check, check():
 
 with skip_run('skip', 'Test Experiment Framework') as check, check():
 
-    # Create actor groups
-    actor_groups = create_actor_groups()
-
     # Setup experiment
     exp_config_path = 'experiments/complex_experiment/complex_experiment_config.yml'
     exp_config = yaml.load(open(str(exp_config_path)), Loader=yaml.SafeLoader)
-    config['experiment']['type'] = SearchingExperiment
-    config['experiment']['config'] = exp_config
+    for i in range(3):
+        # Create actor groups
+        actor_groups = create_actor_groups()
+        config['experiment']['type'] = SearchingExperiment
+        exp_config['id'] = i
+        config['experiment']['config'] = exp_config
+        env = ShastaEnv(config, actor_groups=actor_groups)
 
-    env = ShastaEnv(config, actor_groups=actor_groups)
-
-    # Check step and reset
-    observation, reward, done, info = env.step([0, 0, 0, 0, 0, 0])
-    env.reset()
-    observation, reward, done, info = env.step([1, 1, 1, 1, 1, 1])
+        # Check step and reset
+        observation, reward, done, info = env.step([1, 1, 1, 1, 1, 1])
+        # env.reset()
+        # observation, reward, done, info = env.step([1, 1, 1, 1, 1, 1])
+        env.close()
 
 with skip_run('skip', 'Test Building') as check, check():
 

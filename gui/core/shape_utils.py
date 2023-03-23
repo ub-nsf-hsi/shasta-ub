@@ -80,6 +80,9 @@ class BaseObject(object):
         # Clear any previous transformations
         gl.glPushMatrix()
 
+    def draw(self):
+        pass
+
 
 class Rectangle(BaseObject):
     """

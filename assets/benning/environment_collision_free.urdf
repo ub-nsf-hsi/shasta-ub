@@ -11,6 +11,9 @@
     <geometry>
       <mesh filename="meshes/map.obj"/>
     </geometry>
+<material name="red">
+        <color rgba="1 0 0 1"/>
+      </material>
   </visual>
 </link>
 </robot>

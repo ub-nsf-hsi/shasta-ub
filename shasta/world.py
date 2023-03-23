@@ -2,14 +2,14 @@ import numpy as np
 
 
 class World:
-    def __init__(self, config):
+    def __init__(self, config, physics_client):
         super(World, self).__init__()
         # Need to specify some parameters
         self.config = config
         self.actor_ids = []
 
         # Setup the phsysics client
-        self.physics_client = None
+        self.physics_client = physics_client
 
         return None
 
@@ -82,11 +82,7 @@ class World:
         -------
         None
         """
-        # Check if the physic client is added to the actor
-        if actor.physics_client is None:
-            actor.physics_client = self.physics_client
-
-        # Load the actor
-        actor._load()
+        # Load the actor and add the physics client
+        actor._load(physics_client=self.physics_client)
         self.actor_ids.append(actor.get_actor_id())
         return None
