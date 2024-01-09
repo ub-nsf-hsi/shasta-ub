@@ -108,3 +108,4 @@ ENV/
 
 # Data folder
 /data/
+/reports/
