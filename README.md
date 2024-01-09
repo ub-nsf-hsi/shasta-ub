@@ -1,6 +1,6 @@
 # SHaSTA (Simulator for Human and Swarm Team Applications)
 
-![Simulator Banner](docs/images/cessna.png)
+![Simulator Banner](docs/images/overview.png)
 *(Screenshot for illustration purposes only.)*
 
 Welcome to the SHaSTA! An open-source simulation platform to study human-swarm applications. The platform provides a unified interface for humans and learning algorithms to command/learn swarm robot behaviors. SHaSTA also provides a unique ability to collect physiological information from humans and time synchronize it with swarm simulation.
@@ -8,7 +8,7 @@ Welcome to the SHaSTA! An open-source simulation platform to study human-swarm a
 
 ## Table of Contents
 
-- [SHaSTA](#shasta)
+- [SHaSTA (Simulator for Human and Swarm Team Applications)](#shasta-simulator-for-human-and-swarm-team-applications)
   - [Table of Contents](#table-of-contents)
   - [Features](#features)
   - [Installation](#installation)
