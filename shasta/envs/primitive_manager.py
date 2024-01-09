@@ -65,9 +65,13 @@ class PrimitiveManager(object):
         """Get the centroid of the vehicles
         """
         centroid = []
-        for vehicle in self.action['vehicles']:
-            centroid.append(vehicle.current_pos)
-        centroid = np.mean(np.asarray(centroid), axis=0)
+        if len(self.action['vehicles']) > 1:
+            for vehicle in self.action['vehicles']:
+                centroid.append(vehicle.current_pos)
+            centroid = np.mean(np.asarray(centroid), axis=0)
+        else:
+            centroid = self.action['vehicles'][0].current_pos
+
         return centroid
 
     def planning_primitive(self):

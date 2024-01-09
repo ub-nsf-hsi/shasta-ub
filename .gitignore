@@ -103,6 +103,9 @@ ENV/
 
 # IDE settings
 .vscode/
+.DS_Store
+.DS_Store?
 
 # Data folder
 /data/
+/reports/
