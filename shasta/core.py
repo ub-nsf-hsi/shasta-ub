@@ -145,7 +145,6 @@ class ShastaCore:
 
             for actor in self.actor_groups[group_id]:
                 # Reset the actor and collect the observation
-                print(actor.init_pos)
                 actor.reset()
 
         return None
