@@ -1,14 +1,13 @@
 import os
-import psutil
 import signal
 
+import psutil
 import pybullet as p
 from pybullet_utils import bullet_client as bc
 
-from .world import World
 from .map import Map
-
 from .utils import get_initial_positions
+from .world import World
 
 
 def kill_all_servers():
@@ -32,7 +31,7 @@ class ShastaCore:
 
         # Verify if the actor groups is a dictionary
         if not isinstance(self.actor_groups, dict):
-            raise TypeError('Actor groups should be of type dict')
+            raise TypeError("Actor groups should be of type dict")
 
         # Setup world and map
         self.world = World(config)
@@ -49,10 +48,10 @@ class ShastaCore:
         None
         """
         # Usage mode
-        if self.config['headless']:
+        if self.config["headless"]:
             self.physics_client = bc.BulletClient(connection_mode=p.DIRECT)
         else:
-            options = '--background_color_red=0.85 --background_color_green=0.85 --background_color_blue=0.85'  # noqa
+            options = "--background_color_red=0.85 --background_color_green=0.85 --background_color_blue=0.85"  # noqa
             self.physics_client = bc.BulletClient(
                 connection_mode=p.GUI, options=options
             )
@@ -78,7 +77,7 @@ class ShastaCore:
 
         # Set parameters for simulation
         self.physics_client.setPhysicsEngineParameter(
-            fixedTimeStep=self.config['time_step'] / 10,
+            fixedTimeStep=self.config["time_step"] / 10,
             numSubSteps=1,
             numSolverIterations=5,
         )
@@ -108,7 +107,7 @@ class ShastaCore:
 
         # Load the environment and setup the map
         self.map.setup(experiment_config)
-        read_path = self.map.asset_path + '/environment_collision_free.urdf'
+        read_path = self.map.asset_path + "/environment_collision_free.urdf"
         self.world.load_world_model(read_path)
 
         # Spawn the actors in the physics client

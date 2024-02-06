@@ -1,12 +1,13 @@
 from collections import defaultdict
 
+from gym import spaces
+
 from shasta.base_experiment import BaseExperiment
 
-from .custom_primitive import FormationWithPlanning
-from .states import StatesExtractor
 from .actions import SimpleActionDecoder
-from gym import spaces
+from .custom_primitive import FormationWithPlanning
 from .rewards import Reward
+from .states import StatesExtractor
 from .target import TargetManager
 
 
@@ -21,7 +22,9 @@ class SearchingExperiment(BaseExperiment):
     def __init__(self, config, core, experiment_config=None, *args, **kargs):
         super().__init__(config, core, experiment_config, *args, **kargs)
         self.target_manager = TargetManager(experiment_config, core)
-        self.state_extractor = StatesExtractor(experiment_config, core, self.target_manager)
+        self.state_extractor = StatesExtractor(
+            experiment_config, core, self.target_manager
+        )
         self.actions_decoder = SimpleActionDecoder(experiment_config)
         self.reward_manager = Reward(experiment_config, self.target_manager)
         self.experiment_config = experiment_config
@@ -31,14 +34,14 @@ class SearchingExperiment(BaseExperiment):
         for i in range(6):
             self.actions[i] = FormationWithPlanning(env_map)
 
-    def reset(self,core):
+    def reset(self, core):
         """Called at the beginning and each time the simulation is reset"""
 
         core.reset()
 
     def get_action_space(self):
         """Returns the action space"""
-        return spaces.MultiDiscrete([5,5,5,5,5,5])
+        return spaces.MultiDiscrete([5, 5, 5, 5, 5, 5])
 
     def get_observation_space(self):
         """Returns the observation space"""
@@ -72,7 +75,7 @@ class SearchingExperiment(BaseExperiment):
 
             if all(self.actions_done):
                 for group_id in actor_groups.keys():
-                    self.actions[group_id].path_points=None
+                    self.actions[group_id].path_points = None
                 break
 
     def get_observation(self, observation, core):
@@ -87,12 +90,12 @@ class SearchingExperiment(BaseExperiment):
         actor_groups = core.get_actor_groups()
         grouped_by_type = group_actors_by_type(actor_groups)
         states = self.state_extractor.get_state(
-            grouped_by_type['uav'], grouped_by_type['ugv']
+            grouped_by_type["uav"], grouped_by_type["ugv"]
         )
 
         # Update progress
         done = self.state_extractor.update_progrees(
-            grouped_by_type['uav'], grouped_by_type['ugv']
+            grouped_by_type["uav"], grouped_by_type["ugv"]
         )
 
         return states, {"searching_done": done}
@@ -105,5 +108,7 @@ class SearchingExperiment(BaseExperiment):
         """Computes the reward"""
         actor_groups = core.get_actor_groups()
         grouped_by_type = group_actors_by_type(actor_groups)
-        reward = self.reward_manager.mission_reward(grouped_by_type['ugv'], grouped_by_type['uav'], self.experiment_config)
+        reward = self.reward_manager.mission_reward(
+            grouped_by_type["ugv"], grouped_by_type["uav"], self.experiment_config
+        )
         return reward

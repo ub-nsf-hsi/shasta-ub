@@ -1,11 +1,9 @@
 import collections
-import time
 
 import numpy as np
 
 from sklearn.cluster import KMeans
 
-from .target import TargetManager
 #kmeans warning 
 import warnings
 warnings.filterwarnings('ignore')

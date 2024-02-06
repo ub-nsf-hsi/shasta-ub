@@ -1,7 +1,6 @@
 import numpy as np
 
 from shasta.primitives import PathPlanning, Formation
-import time
 
 class FormationWithPlanning:
     def __init__(self, env_map) -> None:
