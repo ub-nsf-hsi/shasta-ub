@@ -1,12 +1,10 @@
-import numpy as np
 import networkx as nx
+import numpy as np
 import osmnx as ox
 
 
 class PathPlanning(object):
-    """Path planner based on the skeleton of the image.
-    Generates a spline path
-    """
+    """Path planner"""
 
     def __init__(self, env_map):
         self.map = env_map
@@ -86,7 +84,7 @@ class PathPlanning(object):
             end_lat_lon = self.map.convert_to_lat_lon(end)
             end = ox.distance.nearest_nodes(self.G, X=end_lat_lon[1], Y=end_lat_lon[0])
 
-        route = nx.shortest_path(self.G, start, end, weight='length')
+        route = nx.shortest_path(self.G, start, end, weight="length")
         for u, v in zip(route[:-1], route[1:]):
             # if there are parallel edges, select the shortest in length
             data = min(self.G.get_edge_data(u, v).values(), key=lambda d: d["length"])
@@ -116,4 +114,10 @@ class PathPlanning(object):
         return path_points
 
     def execute(self):
+        """Execute the path planning
+
+        Raises
+        ------
+        NotImplementedError
+        """
         raise NotImplementedError

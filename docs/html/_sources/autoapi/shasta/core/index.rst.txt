@@ -1,0 +1,121 @@
+:py:mod:`shasta.core`
+=====================
+
+.. py:module:: shasta.core
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   shasta.core.ShastaCore
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   shasta.core.kill_all_servers
+
+
+
+.. py:function:: kill_all_servers()
+
+   Kill all PIDs that start with Carla
+
+
+.. py:class:: ShastaCore(config, actor_groups: dict = None)
+
+
+   Class responsible of handling all the different CARLA functionalities,
+   such as server-client connecting, actor spawning,
+   and getting the sensors data.
+
+   .. py:method:: _setup_physics_client()
+
+      Setup the physics client
+
+      :rtype: None
+
+
+   .. py:method:: get_physics_client()
+
+      Ge the physics client
+
+      :returns: The bullet physics client
+      :rtype: object
+
+
+   .. py:method:: init_server()
+
+      Start a server on a random port
+
+
+   .. py:method:: setup_experiment(experiment_config)
+
+      Initialize the hero and sensors
+
+
+   .. py:method:: get_world()
+
+      Get the World object from the simulation
+
+      :returns: The world object
+      :rtype: object
+
+
+   .. py:method:: get_map()
+
+      Get the Map object from the simulation
+
+      :returns: The map object
+      :rtype: object
+
+
+   .. py:method:: reset()
+
+      This function resets / spawns the hero vehicle and its sensors
+
+
+   .. py:method:: spawn_actors()
+
+      Spawns vehicles and walkers, also setting up the Traffic Manager and its parameters
+
+
+   .. py:method:: get_actor_groups()
+
+      Get the actor groups
+
+      :returns: The actor groups as a dict with group id as the key
+                list of actors as the value
+      :rtype: dict
+
+
+   .. py:method:: get_actors_by_group_id(group_id)
+
+      Get a list of actor given by group id
+
+      :param group_id: Group id to be returned
+      :type group_id: int
+
+      :returns: A list of actor given the group id
+      :rtype: list
+
+
+   .. py:method:: tick()
+
+      Performs one tick of the simulation, moving all actors, and getting the sensor data
+
+
+   .. py:method:: close_simulation()
+
+      Close the simulation
+
+
+

@@ -1,0 +1,16 @@
+:py:mod:`shasta.primitives`
+===========================
+
+.. py:module:: shasta.primitives
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   formation/index.rst
+   path_planning/index.rst
+
+

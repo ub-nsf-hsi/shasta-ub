@@ -1,0 +1,31 @@
+:py:mod:`shasta`
+================
+
+.. py:module:: shasta
+
+
+Subpackages
+-----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 3
+
+   primitives/index.rst
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   actor/index.rst
+   base_experiment/index.rst
+   core/index.rst
+   env/index.rst
+   map/index.rst
+   utils/index.rst
+   visualize/index.rst
+   world/index.rst
+
+

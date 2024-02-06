@@ -1,0 +1,68 @@
+:py:mod:`shasta.primitives.path_planning`
+=========================================
+
+.. py:module:: shasta.primitives.path_planning
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   shasta.primitives.path_planning.PathPlanning
+
+
+
+
+.. py:class:: PathPlanning(env_map)
+
+
+   Bases: :py:obj:`object`
+
+   Path planner
+
+   .. py:method:: linear_refine_implicit(x, n)
+
+      Given a 2D ndarray (npt, m) of npt coordinates in m dimension,
+      insert 2**(n-1) additional points on each trajectory segment
+      Returns an (npt*2**(n-1), m) ndarray
+
+      :param x: A 2D input array
+      :type x: array
+      :param n: Number of intermediate points to insert between two consecutive points in x
+      :type n: int
+
+      :returns: An array with interploated points
+      :rtype: array
+
+      :raises NotImplementedError: The functions is not implemented for 3D or higher dimensions
+      :raises ValueError: Number of intermediate points should be greated than zero
+
+
+   .. py:method:: find_path(start, end, n_splits=1)
+
+      Finds a path between start and end using path graph
+
+      :param start: A cartesian co-ordinate specifying the start position
+      :type start: array
+      :param end: A node ID specifying the end position
+      :type end: array
+      :param n_splits: Number of splits in refining the path points, by default 1
+      :type n_splits: int, optional
+
+      :returns: **path_points** -- A refined path points in pybullet cartesian co-ordinate system
+      :rtype: array
+
+
+   .. py:method:: execute()
+      :abstractmethod:
+
+      Execute the path planning
+
+      :raises NotImplementedError:
+
+
+
