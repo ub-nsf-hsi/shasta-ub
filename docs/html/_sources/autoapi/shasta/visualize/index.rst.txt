@@ -1,0 +1,27 @@
+:py:mod:`shasta.visualize`
+==========================
+
+.. py:module:: shasta.visualize
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   shasta.visualize.plot_nodes
+
+
+
+.. py:function:: plot_nodes(config)
+
+   Visualize the node graph
+
+   :param config: a yaml file providing the configuration
+   :type config: yaml
+
+

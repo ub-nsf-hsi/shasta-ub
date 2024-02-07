@@ -1,0 +1,34 @@
+:py:mod:`shasta.utils`
+======================
+
+.. py:module:: shasta.utils
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   shasta.utils.get_initial_positions
+
+
+
+.. py:function:: get_initial_positions(cartesian_pos, r, n)
+
+   Initial position for actor in the form of a ring
+
+   :param cartesian_pos: Initial cartesian pos
+   :type cartesian_pos: array
+   :param r: Radius of formation
+   :type r: float
+   :param n: Number of points in the circle
+   :type n: int
+
+   :returns: An array of points in the form of a ring
+   :rtype: array
+
+

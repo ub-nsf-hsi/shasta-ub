@@ -7,8 +7,8 @@ Welcome to shasta's documentation!
 
    readme
    installation
-   usage
    contributing
+   code_of_conduct
    history
 
 Indices and tables

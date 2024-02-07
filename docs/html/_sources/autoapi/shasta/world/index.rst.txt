@@ -1,0 +1,59 @@
+:py:mod:`shasta.world`
+======================
+
+.. py:module:: shasta.world
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   shasta.world.World
+
+
+
+
+.. py:class:: World(config)
+
+
+   .. py:method:: load_world_model(read_path)
+
+      Load the URDF model
+
+      :param read_path: The path to the URDF model
+      :type read_path: str
+
+
+   .. py:method:: change_camera_position(camera_distance=150.0, camera_yaw=0.0, camera_pitch=-89.999, camera_target_position=[0, 30, 0])
+
+      Change the world camera position
+
+      :param camera_distance: Camera distance from target, by default 150
+      :type camera_distance: float, optional
+      :param camera_yaw: Camera yaw, by default 0
+      :type camera_yaw: float, optional
+      :param camera_pitch: Camera pitch, by default -89.999
+      :type camera_pitch: float, optional
+      :param camera_target_position: Camera target position, by default [0, 30, 0]
+      :type camera_target_position: list, optional
+
+      :rtype: None
+
+
+   .. py:method:: spawn_actor(actor, spawn_point)
+
+      Spawn the actor at a given point
+
+      :param actor: An actor to spawm
+      :type actor: object
+      :param spawn_point: Spawn point
+      :type spawn_point: array
+
+      :rtype: None
+
+
+

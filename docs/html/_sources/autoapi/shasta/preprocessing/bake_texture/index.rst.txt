@@ -1,0 +1,54 @@
+:py:mod:`shasta.preprocessing.bake_texture`
+===========================================
+
+.. py:module:: shasta.preprocessing.bake_texture
+
+
+Module Contents
+---------------
+
+.. py:data:: ops
+
+   
+
+.. py:data:: scene
+
+   
+
+.. py:data:: mesh
+
+   
+
+.. py:data:: scene
+
+   
+
+.. py:data:: obs
+   :value: []
+
+   
+
+.. py:data:: ctx
+
+   
+
+.. py:data:: image
+
+   
+
+.. py:data:: matslots
+
+   
+
+.. py:data:: mat
+
+   
+
+.. py:data:: tex
+
+   
+
+.. py:data:: slot
+
+   
+
