@@ -1,0 +1,87 @@
+:py:mod:`shasta.actor`
+======================
+
+.. py:module:: shasta.actor
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   shasta.actor.BaseActor
+
+
+
+
+.. py:class:: BaseActor
+
+
+   Bases: :py:obj:`with_metaclass`\ (\ :py:obj:`ABCMeta`\ , :py:obj:`object`\ )
+
+   This the base class for single UGV robot
+
+   .. py:attribute:: physics_client
+
+      
+
+   .. py:attribute:: _loaded
+      :value: False
+
+      
+
+   .. py:method:: _load()
+
+      Load object into pybullet and return list of loaded body ids.
+
+
+   .. py:method:: get_actor_id()
+
+      Get the actor id
+
+      :returns: The actor id in the simulation
+      :rtype: int
+
+
+   .. py:method:: load_asset(*args, **kwargs)
+      :abstractmethod:
+
+      Load the assests of the actor.
+
+
+   .. py:method:: reset(*args, **kwargs)
+      :abstractmethod:
+
+      Reset the actor
+
+      :raises NotImplementedError:
+
+
+   .. py:method:: get_observation(*args, **kwargs)
+      :abstractmethod:
+
+      Get the observation from the actor.
+
+      :raises NotImplementedError:
+
+
+   .. py:method:: apply_action(*args, **kwargs)
+      :abstractmethod:
+
+      Apply the action to the actor
+
+      :raises NotImplementedError:
+
+
+   .. py:method:: destroy(*args, **kwargs)
+      :abstractmethod:
+
+      Destroy the actor
+
+      :raises NotImplementedError:
+
+
+

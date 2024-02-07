@@ -1,0 +1,120 @@
+:py:mod:`shasta.primitives`
+===========================
+
+.. py:module:: shasta.primitives
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   formation/index.rst
+   path_planning/index.rst
+
+
+Package Contents
+----------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   shasta.primitives.Formation
+   shasta.primitives.PathPlanning
+
+
+
+
+.. py:class:: Formation(config=None)
+
+
+   Bases: :py:obj:`object`
+
+   Formation control primitive using region based shape control.
+   Coded by: Apurvakumar Jani, Date: 18/9/2019
+
+   .. py:method:: calculate_vel(vehicle, dt, all_drones_pos, centroid_pos, path_vel, vmax, formation_type)
+
+      Calculate the vehicle velocity depending on the position of the peer vehicles
+
+      :param vehicle: A class instance of UxV agent
+      :type vehicle: class instance
+      :param dt: Time step duration (in seconds) to use in next position calculation
+      :type dt: float
+      :param all_drones_pos: An array with position of all the vehicles in the group/platoon
+      :type all_drones_pos: aarray
+      :param centroid_pos: An array specifying the centroid of the platoon
+      :type centroid_pos: array
+      :param path_vel: Path velocity calculated from next position and current position
+      :type path_vel: float
+      :param vmax: Maximum velocity of the vehicle
+      :type vmax: float
+      :param formation_type: Whether the formation is solid or ring
+      :type formation_type: str
+
+      :returns: **vehicle** -- A vehicle class instance with updated position
+      :rtype: class instance
+
+
+   .. py:method:: execute(vehicles, next_pos, centroid_pos, formation_type)
+
+      Get the position of the formation control
+
+      :param vehicles: A list containing UAV or UGV class
+      :type vehicles: list
+      :param centroid_pos: An array containing the x, y, and z position
+      :type centroid_pos: array
+      :param dt: Time step to be used for distance calculation
+      :type dt: float
+
+
+
+.. py:class:: PathPlanning(env_map)
+
+
+   Bases: :py:obj:`object`
+
+   Path planner based on the skeleton of the image.
+   Generates a spline path
+
+   .. py:method:: linear_refine_implicit(x, n)
+
+      Given a 2D ndarray (npt, m) of npt coordinates in m dimension,
+      insert 2**(n-1) additional points on each trajectory segment
+      Returns an (npt*2**(n-1), m) ndarray
+
+      :param x: A 2D input array
+      :type x: array
+      :param n: Number of intermediate points to insert between two consecutive points in x
+      :type n: int
+
+      :returns: An array with interploated points
+      :rtype: array
+
+      :raises NotImplementedError: The functions is not implemented for 3D or higher dimensions
+      :raises ValueError: Number of intermediate points should be greated than zero
+
+
+   .. py:method:: find_path(start, end, n_splits=1)
+
+      Finds a path between start and end using path graph
+
+      :param start: A cartesian co-ordinate specifying the start position
+      :type start: array
+      :param end: A node ID specifying the end position
+      :type end: array
+      :param n_splits: Number of splits in refining the path points, by default 1
+      :type n_splits: int, optional
+
+      :returns: **path_points** -- A refined path points in pybullet cartesian co-ordinate system
+      :rtype: array
+
+
+   .. py:method:: execute()
+      :abstractmethod:
+
+
+

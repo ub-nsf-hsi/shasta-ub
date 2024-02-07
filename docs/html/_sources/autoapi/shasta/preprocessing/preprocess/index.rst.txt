@@ -1,0 +1,46 @@
+:py:mod:`shasta.preprocessing.preprocess`
+=========================================
+
+.. py:module:: shasta.preprocessing.preprocess
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   shasta.preprocessing.preprocess.PreProcess
+
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   shasta.preprocessing.preprocess.preprocess
+
+
+.. py:class:: PreProcess(osm_map_path=None, blender_path=None)
+
+
+   .. py:method:: _save_building_info()
+      :abstractmethod:
+
+
+   .. py:method:: _save_graph_info()
+      :abstractmethod:
+
+
+   .. py:method:: run_processing()
+
+
+
+.. py:data:: preprocess
+
+   
+

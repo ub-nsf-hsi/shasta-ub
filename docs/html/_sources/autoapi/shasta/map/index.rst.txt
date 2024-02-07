@@ -1,0 +1,181 @@
+:py:mod:`shasta.map`
+====================
+
+.. py:module:: shasta.map
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   shasta.map.Map
+
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   shasta.map.directories
+   shasta.map.assets_root
+
+
+.. py:data:: directories
+
+   
+
+.. py:data:: assets_root
+
+   
+
+.. py:class:: Map
+
+
+   .. py:method:: _affine_transformation_and_graph()
+
+      Performs initial conversion of the lat lon to cartesian
+
+
+   .. py:method:: _setup_building_info()
+
+
+   .. py:method:: setup(experiment_config)
+
+      Perform the initial experiment setup e.g., loading the map
+
+      :param experiment_config: A yaml file providing the map configuration
+      :type experiment_config: yaml
+
+      :rtype: None
+
+      :raises FileNotFoundError: If the experiment config is none, raises a file not found error
+
+
+   .. py:method:: get_affine_transformation_and_graph()
+
+      Get the transformation matrix and the node graph of the map
+
+      :returns: The transformation matrix and the node graph
+      :rtype: array, node graph
+
+
+   .. py:method:: get_node_graph()
+
+      Get the node graph of the world
+
+      :returns: A node graph of the world map
+      :rtype: networkx graph
+
+
+   .. py:method:: get_node_info(node_index)
+
+      Get the information about a node.
+
+      :param id: Node ID
+      :type id: int
+
+      :returns: A dictionary containing all the information about the node.
+      :rtype: dict
+
+
+   .. py:method:: convert_to_lat_lon(point)
+
+      Convert a given point to lat lon co-ordinates
+
+      :param point: A numpy array in pybullet cartesian co-ordinates
+      :type point: array
+
+      :returns: **lat_lon** -- The lat lon co-ordinates
+      :rtype: array
+
+
+   .. py:method:: convert_to_cartesian(point)
+
+      Convert a lat lon co-ordinates to cartesian coordinates
+
+      :param point: A numpy array in lat lon co-ordinates co-ordinates
+      :type point: array
+
+      :returns: **lat_lon** -- The cartesian coordinates
+      :rtype: array
+
+
+   .. py:method:: get_building_info(building_index)
+
+      Get the information about a building such as perimeter,
+      position, number of floors.
+
+      :param id: Building ID
+      :type id: int
+
+      :returns: A dictionary containing all the information about the building.
+      :rtype: dict
+
+
+   .. py:method:: get_lat_lon_spawn_points(n_points=5)
+
+      Get the latitude and longitude spawn points
+
+      :param n_points: Number of points to random latitude and longitude points, by default 5
+      :type n_points: int, optional
+
+      :returns: An array of cartesian spawn points
+      :rtype: array
+
+
+   .. py:method:: get_cartesian_node_position(node_index)
+
+      Get the cartesian co-ordinates given the node index
+
+      :param node_index: The node index in the map
+      :type node_index: int
+
+      :returns: The cartesian co-ordinates
+      :rtype: array
+
+
+   .. py:method:: get_lat_lon_node_position(node_index)
+
+      Get the lat and lon given the node index
+
+      :param node_index: The node index in the map
+      :type node_index: int
+
+      :returns: The cartesian co-ordinates
+      :rtype: array
+
+
+   .. py:method:: get_cartesian_spawn_points(n_points=5)
+
+      Get the cartesian spawn points
+
+      :param n_points: Number of points to random cartesian co-ordinates, by default 5
+      :type n_points: int, optional
+
+      :returns: An array of cartesian spawn points
+      :rtype: array
+
+
+   .. py:method:: get_all_buildings()
+
+      Get all the buildings
+
+      :returns: A dataframe with all the building information
+      :rtype: dataframe
+
+
+   .. py:method:: get_transformation_matrix()
+
+      Get the transformation matrix to convert lat lon to cartesian
+
+      :returns: The transformation matrix
+      :rtype: array
+
+
+

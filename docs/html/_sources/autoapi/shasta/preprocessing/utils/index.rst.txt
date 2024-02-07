@@ -1,0 +1,32 @@
+:py:mod:`shasta.preprocessing.utils`
+====================================
+
+.. py:module:: shasta.preprocessing.utils
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   shasta.preprocessing.utils.extract_building_info
+   shasta.preprocessing.utils.save_buildings_map
+   shasta.preprocessing.utils.extract_path_info
+
+
+
+.. py:function:: extract_building_info(osm_path, save_fig=False)
+
+   Perfrom initial building setup.
+
+
+.. py:function:: save_buildings_map(osm_path)
+
+
+.. py:function:: extract_path_info(osm_path)
+
+
