@@ -12,7 +12,6 @@ Welcome to the SHaSTA! An open-source simulation platform to study human-swarm a
   - [Table of Contents](#table-of-contents)
   - [Features](#features)
   - [Installation](#installation)
-  - [Usage](#usage)
   - [Contributing](#contributing)
   - [Code of Conduct](#code-of-conduct)
   - [License](#license)
@@ -43,29 +42,17 @@ Welcome to the SHaSTA! An open-source simulation platform to study human-swarm a
 
 3. Configure your XPlane installation and simulator settings as needed.
 
-## Usage
-
-1. Launch the simulator by running:
-
-   ```
-   python main.py
-   ```
-   If you want to run a particular block of code, replace the `skip` by `run`.
-
-2. Explore the simulation environment, adjust settings, and start flying!
-
-
 ## Contributing
 
-We welcome contributions from the community to improve and expand this simulator project. If you're interested in contributing, please follow our [Contribution Guidelines](CONTRIBUTING.md).
+We welcome contributions from the community to improve and expand this simulator project. If you're interested in contributing, please follow our [Contribution Guidelines](./CONTRIBUTING.md).
 
 ## Code of Conduct
 
-Please review and adhere to our [Code of Conduct](CODE_OF_CONDUCT.md) when participating in our community. We strive to maintain a respectful and inclusive environment for everyone.
+Please review and adhere to our [Code of Conduct](./CODE_OF_CONDUCT.md) when participating in our community. We strive to maintain a respectful and inclusive environment for everyone.
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE), which means you are free to use, modify, and distribute the code in your projects.
+This project is licensed under the [MIT License](./LICENSE), which means you are free to use, modify, and distribute the code in your projects.
 
 ---
 
