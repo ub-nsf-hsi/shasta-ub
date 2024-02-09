@@ -1,7 +1,6 @@
 # SHaSTA (Simulator for Human and Swarm Team Applications)
 
-![Simulator Banner](docs/images/overview.png)
-*(Screenshot for illustration purposes only.)*
+![](/docs/images/overview.png)
 
 Welcome to the SHaSTA! An open-source simulation platform to study human-swarm applications. The platform provides a unified interface for humans and learning algorithms to command/learn swarm robot behaviors. SHaSTA also provides a unique ability to collect physiological information from humans and time synchronize it with swarm simulation.
 
@@ -40,7 +39,7 @@ Welcome to the SHaSTA! An open-source simulation platform to study human-swarm a
    pip install -r requirements.txt
    ```
 
-3. Configure your XPlane installation and simulator settings as needed.
+3. Configure your SHaSTA installation and simulator settings as needed.
 
 ## Contributing
 

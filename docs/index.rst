@@ -8,12 +8,12 @@ Welcome to shasta's documentation!
 
    readme
    installation
-   getting_started
+   getting-started
    contributing
-   code_of_conduct
+   code-of-conduct
    history
 
-======================================
+==================
 Indices and tables
 ==================
 * :ref:`genindex`
