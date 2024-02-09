@@ -1,5 +1,6 @@
-import numpy as np
 import copy
+
+import numpy as np
 
 from shasta.actor import BaseActor
 

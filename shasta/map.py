@@ -1,13 +1,10 @@
+import os
 import warnings
 
-from pathlib import Path
-
+import networkx as nx
 import numpy as np
 import osmnx as ox
 import pandas as pd
-import networkx as nx
-
-import os
 
 from shasta.preprocessing.utils import extract_building_info
 
