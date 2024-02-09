@@ -1,8 +1,6 @@
 import collections
-import time
 
 import numpy as np
-
 from sklearn.cluster import KMeans
 
 from .target import TargetManager
@@ -30,7 +28,7 @@ def cluster(vehicles, n_clusters, config):
     if np.all(features == 0):
         cluster_ids, cluster_pos = 0, np.empty(n_clusters)
     else:
-        kmeans = KMeans(n_clusters=n_clusters, random_state=0).fit(features)
+        kmeans = KMeans(n_clusters=n_clusters, random_state=0, n_init=10).fit(features)
         cluster_ids = kmeans.labels_
         cluster_pos = []
         for j in range(n_clusters):
@@ -55,8 +53,8 @@ def get_features(vehicles, config):
         A numpy array containing 3 features namely x, y position
         and battery or ammon depeding the vehicle type
     """
-    w_cluster_battery_pos = config['weights']['w_cluster_battery_pos']
-    w_cluster_ammo_pos = config['weights']['w_cluster_ammo_pos']
+    w_cluster_battery_pos = config["weights"]["w_cluster_battery_pos"]
+    w_cluster_ammo_pos = config["weights"]["w_cluster_ammo_pos"]
     features = []
     for vehicle in vehicles:
         temp = [0, 0, 0]  # Three features for clustering
@@ -64,7 +62,7 @@ def get_features(vehicles, config):
         if vehicle.idle:
             temp[0] = pos[0]  # x position
             temp[1] = pos[1]  # y position
-            if vehicle.type == 'uav':
+            if vehicle.type == "uav":
                 temp[2] = w_cluster_battery_pos * vehicle.battery  # Battery
             else:
                 temp[2] = w_cluster_ammo_pos * vehicle.ammo  # Ammo
@@ -203,8 +201,8 @@ class StatesExtractor:
 
     def calculate_distance(self, target, node):
         # Convert to cartesian
-        cart_node = self.map.convert_to_cartesian([node['y'], node['x']])
-        cart_target = self.map.convert_to_cartesian([target['y'], target['x']])
+        cart_node = self.map.convert_to_cartesian([node["y"], node["x"]])
+        cart_target = self.map.convert_to_cartesian([target["y"], target["x"]])
 
         # Calculate distance
         dist = np.linalg.norm(cart_target - cart_node)
@@ -212,15 +210,15 @@ class StatesExtractor:
 
     def get_pareto_nodes_online(self):
         """Get pareto nodes to visit running online"""
-        n_keep_in_pareto = self.config['state']['n_keep_in_pareto']
-        n_nodes = self.config['simulation']['n_nodes']
-        n_targets = self.config['simulation']['n_targets']
+        n_keep_in_pareto = self.config["state"]["n_keep_in_pareto"]
+        n_nodes = self.config["simulation"]["n_nodes"]
+        n_targets = self.config["simulation"]["n_targets"]
 
         # Importance matrix
         importance = np.zeros((n_nodes, n_targets))
 
         for j in range(n_nodes):
-            for k, target in enumerate(self.config['simulation']['target_building_id']):
+            for k, target in enumerate(self.config["simulation"]["target_building_id"]):
                 target_info = self.target_manager.get_target_info(target)
 
                 node_info = self.map.get_node_info(j)
@@ -228,7 +226,7 @@ class StatesExtractor:
                 dist = self.calculate_distance(
                     self.map.get_node_info(target_info["id"]), node_info
                 )
-                probability_goals = target_info['probability_goals']
+                probability_goals = target_info["probability_goals"]
 
                 # Calculate importance
                 importance[j, k] = probability_goals * 1 / (dist + 0.001)
@@ -293,21 +291,21 @@ class StatesExtractor:
             group info where the key is the group id
         """
 
-        if group_type == 'uav':
-            n_groups = self.config['simulation']['n_uav_clusters']
+        if group_type == "uav":
+            n_groups = self.config["simulation"]["n_uav_clusters"]
         else:
-            n_groups = self.config['simulation']['n_ugv_clusters']
+            n_groups = self.config["simulation"]["n_ugv_clusters"]
 
         groups = []
         if cluster_pos.all():
             for i in range(n_groups):
                 info = {}
-                info['cluster_id'] = i
-                info['position'] = cluster_pos[i]
-                info['vehicle_ids'] = self.vehicles_ids(i, cluster_ids)
-                info['group_type'] = group_type
+                info["cluster_id"] = i
+                info["position"] = cluster_pos[i]
+                info["vehicle_ids"] = self.vehicles_ids(i, cluster_ids)
+                info["group_type"] = group_type
                 # Add states
-                info['state'] = self.encode_state(
+                info["state"] = self.encode_state(
                     i, cluster_ids, cluster_pos, group_type, pareto_node_pos
                 )
                 groups.append(info)
@@ -315,12 +313,12 @@ class StatesExtractor:
             # Return all the states with zeros
             for i in range(n_groups):
                 info = {}
-                info['cluster_id'] = i
-                info['position'] = [0, 0]
-                info['vehicle_ids'] = 0
-                info['group_type'] = group_type
+                info["cluster_id"] = i
+                info["position"] = [0, 0]
+                info["vehicle_ids"] = 0
+                info["group_type"] = group_type
                 # Add states
-                info['state'] = [0] * 7
+                info["state"] = [0] * 7
                 groups.append(info)
 
         return groups
@@ -375,15 +373,15 @@ class StatesExtractor:
         state = []
 
         # Update the states with time
-        remaining_time = self.config['simulation']['total_time'] - self.current_time
+        remaining_time = self.config["simulation"]["total_time"] - self.current_time
         normalized_time = (remaining_time - 0) / (
-            self.config['simulation']['total_time'] - 0
+            self.config["simulation"]["total_time"] - 0
         )
         state.append([normalized_time])
 
         # Perform clustering on UAV and UGV
-        n_ugv_clusters = self.config['simulation']['n_ugv_clusters']
-        n_uav_clusters = self.config['simulation']['n_uav_clusters']
+        n_ugv_clusters = self.config["simulation"]["n_ugv_clusters"]
+        n_uav_clusters = self.config["simulation"]["n_uav_clusters"]
 
         cluster_id_ugv, ugv_cluster_pos = cluster(ugv, n_ugv_clusters, self.config)
         cluster_id_uav, uav_cluster_pos = cluster(uav, n_uav_clusters, self.config)
@@ -395,15 +393,8 @@ class StatesExtractor:
         pareto_node_pos = []
         for node in self.pareto_nodes:
             node_info = self.map.get_node_info(node)
-            position = self.map.convert_to_cartesian([node_info['y'], node_info['x']])
+            position = self.map.convert_to_cartesian([node_info["y"], node_info["x"]])
             pareto_node_pos.append(position[0:2])
-
-        ugv_group = self.get_group_info(
-            cluster_id_ugv, ugv_cluster_pos, 'ugv', pareto_node_pos
-        )
-        uav_group = self.get_group_info(
-            cluster_id_uav, uav_cluster_pos, 'uav', pareto_node_pos
-        )
 
         # Calculate distance between cluster and pareto node:
         all_distance = list()
@@ -443,6 +434,6 @@ class StatesExtractor:
     def calculate_distance_pareto_vehicle(self, pareto_pos, vehicle_pos):
         dist = np.linalg.norm(pareto_pos - vehicle_pos)
         return dist
-    
+
     def get_pareto_node(self):
         return self.pareto_nodes

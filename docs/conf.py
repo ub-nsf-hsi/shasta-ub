@@ -97,6 +97,8 @@ show_authors = True
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = False
 
+myst_ref_domains = ["docs/"]
+
 # -- Options for HTML output -------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for

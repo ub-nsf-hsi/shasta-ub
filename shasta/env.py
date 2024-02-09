@@ -60,7 +60,6 @@ class ShastaEnv(gym.Env):
         # Tick once and get the observations
         raw_data = self.core.tick()
         observation, _ = self.experiment.get_observation(raw_data, self.core)
-        print('-' * 32)
 
         return observation
 

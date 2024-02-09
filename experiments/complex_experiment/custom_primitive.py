@@ -1,6 +1,7 @@
 import numpy as np
 
-from shasta.primitives import PathPlanning, Formation
+from shasta.primitives.formation import Formation
+from shasta.primitives.path_planning import PathPlanning
 
 
 class FormationWithPlanning:
@@ -24,7 +25,6 @@ class FormationWithPlanning:
         return centroid
 
     def execute(self, vehicles, target_pos):
-
         # Get centroid and find the shortest path
         self.centroid = self.get_centroid(vehicles)
 
@@ -37,7 +37,7 @@ class FormationWithPlanning:
         # Start executing the action
         if len(self.path_points) > 0:
             self.next_pos = self.path_points[0]
-            self.formation.execute(vehicles, self.next_pos, self.centroid, 'solid')
+            self.formation.execute(vehicles, self.next_pos, self.centroid, "solid")
 
             # Update the path points
             self.update_path_points()

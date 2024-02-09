@@ -2,9 +2,9 @@ from collections import defaultdict
 
 from shasta.base_experiment import BaseExperiment
 
+from .actions import SimpleActionDecoder
 from .custom_primitive import FormationWithPlanning
 from .states import StatesExtractor
-from .actions import SimpleActionDecoder
 
 
 def group_actors_by_type(actor_groups):

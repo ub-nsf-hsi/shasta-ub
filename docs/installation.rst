@@ -32,11 +32,23 @@ You can either clone the public repository:
 
 .. code-block:: console
 
-    $ git clone git://github.com/hemumanju/shasta
+    $ git clone https://github.com/ub-nsf-hsi/shasta-ub.git
+
+
+Install the requirements:
+
+.. code-block:: bash
+
+   pip install -r requirements.txt
+
+Install using python:
 
 .. code-block:: console
 
     $ python setup.py install
 
 
-.. _Github repo: https://github.com/hemumanju/shasta
+.. _Github repo: https://github.com/ub-nsf-hsi/shasta-ub
+
+Configure your SHaSTA installation and simulator settings as needed.
+

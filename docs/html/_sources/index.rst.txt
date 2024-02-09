@@ -1,16 +1,19 @@
+======================================
 Welcome to shasta's documentation!
 ======================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 4
    :caption: Contents:
 
    readme
    installation
+   getting-started
    contributing
-   code_of_conduct
+   code-of-conduct
    history
 
+==================
 Indices and tables
 ==================
 * :ref:`genindex`
