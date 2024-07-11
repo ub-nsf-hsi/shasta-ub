@@ -1,0 +1,13 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\assets",
+    "\\experiments",
+    "\\experiments\\agents",
+    "\\experiments\\complex_experiment",
+    "\\shasta",
+    "\\shasta\\primitives"
+  ],
+  "SelectedNode": "\\experiments\\complex_experiment\\experiment.py",
+  "PreviewInSolutionExplorer": false
+}

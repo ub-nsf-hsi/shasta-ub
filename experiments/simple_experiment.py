@@ -62,15 +62,25 @@ class SimpleExperiment(BaseExperiment):
         return self.observation_space, {}
 
     def get_truncated_status(self, observation, core):
-        """Computes the reward"""
+        """Function to indicate that the episode is terminated because it reached an artificial limit set,
+        for example: time or timesteps exceeded
+
+        Should return a bool with True if the episode exceeded the limit set, False otherwise
+        """
         return False
 
     def get_done_status(self, observation, core):
-        """Returns whether or not the experiment has to end"""
+        """Returns whether the episode has ended.
+
+        Should return True if the episode ended due to the agent achieving a goal, failing, or any other task-specific termination condition
+        """
         if sum(self.observation_space) == self.no_of_buildings:
             return True
         return False
 
     def compute_reward(self, observation, core):
-        """Computes the reward"""
+        """Computes the reward
+        return : float
+            Amount of reward returned after previous action.
+        """
         return sum(self.observation_space)

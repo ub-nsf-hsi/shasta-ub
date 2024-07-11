@@ -5,6 +5,7 @@ from shasta.base_experiment import BaseExperiment
 from .custom_primitive import FormationWithPlanning
 from .states import StatesExtractor
 from .actions import SimpleActionDecoder
+from gymnasium import spaces
 
 
 def group_actors_by_type(actor_groups):
@@ -33,11 +34,11 @@ class SearchingExperiment(BaseExperiment):
 
     def get_action_space(self):
         """Returns the action space"""
-        pass
+        return spaces.multi_discrete.MultiDiscrete([6] * 5)
 
     def get_observation_space(self):
         """Returns the observation space"""
-        pass
+        return spaces.Box(low=0, high=1, shape=(34,))
 
     def get_actions(self):
         """Returns the actions"""
@@ -92,8 +93,20 @@ class SearchingExperiment(BaseExperiment):
 
         return states, {"searching_done": done}
 
+    def get_truncated_status(self, observation, core):
+        """Function to indicate that the episode is terminated because it reached an artificial limit set,
+        for example: time or timesteps exceeded
+
+        Should return a bool with True if the episode exceeded the limit set, False otherwise
+        """
+        return False
+
+
     def get_done_status(self, observation, core):
-        """Returns whether or not the experiment has to end"""
+        """Returns whether the episode has ended.
+
+        Should return True if the episode ended due to the agent achieving a goal, failing, or any other task-specific termination condition
+        """
         return self.actions_done
 
     def compute_reward(self, observation, core):

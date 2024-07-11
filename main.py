@@ -16,8 +16,7 @@ config_path = 'config/simulation_config.yml'
 config = yaml.load(open(str(config_path)), Loader=yaml.SafeLoader)
 
 
-#SimpleExperiment works with Gymnasium
-with skip_run('run', 'Test New Framework') as check, check():
+with skip_run('skip', 'Test New Framework') as check, check():
     n_actor_groups = 3
     actor_groups = {}
     for i in range(n_actor_groups): 
@@ -28,8 +27,7 @@ with skip_run('run', 'Test New Framework') as check, check():
     model.learn(total_timesteps=6000, log_interval=10)
     model.save("SearchExperiment")
 
-#SearchingExperiment works with Gym
-with skip_run('skip', 'Test Experiment Framework') as check, check():
+with skip_run('run', 'Test Experiment Framework') as check, check():
     # Create actor groups
     actor_groups = create_actor_groups()
     # Setup experiment
@@ -39,9 +37,9 @@ with skip_run('skip', 'Test Experiment Framework') as check, check():
     config['experiment']['config'] = exp_config
     env = ShastaEnv(config, actor_groups=actor_groups)
     # Check step and reset
-    observation, reward, done, info = env.step([0, 0, 0, 0, 0, 0])
+    observation, reward, truncated, done, info = env.step([0, 0, 0, 0, 0, 0])
     env.reset()
-    observation, reward, done, info = env.step([1, 1, 1, 1, 1, 1])
+    observation, reward, truncated, done, info = env.step([1, 1, 1, 1, 1, 1])
 
 with skip_run('skip', 'Test Building') as check, check():
     osm_path = 'assets/buffalo-small/map.osm'
