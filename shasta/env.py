@@ -61,7 +61,6 @@ class ShastaEnv(gym.Env):
         raw_data = self.core.tick()
         observation, info = self.experiment.get_observation(raw_data, self.core)
         print('-' * 32)
-
         return observation, info
 
     def step(self, action):

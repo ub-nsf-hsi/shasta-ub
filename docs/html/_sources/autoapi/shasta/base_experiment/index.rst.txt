@@ -1,0 +1,78 @@
+:py:mod:`shasta.base_experiment`
+================================
+
+.. py:module:: shasta.base_experiment
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   shasta.base_experiment.BaseExperiment
+
+
+
+
+.. py:class:: BaseExperiment(config, core, experiment_config=None, *args, **kargs)
+
+
+   Bases: :py:obj:`with_metaclass`\ (\ :py:obj:`ABCMeta`\ , :py:obj:`object`\ )
+
+   .. py:method:: reset()
+
+      Called at the beginning and each time the simulation is reset
+
+
+   .. py:method:: get_action_space()
+      :abstractmethod:
+
+      Returns the action space
+
+
+   .. py:method:: get_observation_space()
+      :abstractmethod:
+
+      Returns the observation space
+
+
+   .. py:method:: get_actions()
+      :abstractmethod:
+
+      Returns the actions
+
+
+   .. py:method:: apply_actions(actions, core)
+      :abstractmethod:
+
+      Given the action, applies the action to group or individual actor
+
+      :param action: value outputted by the policy
+
+
+   .. py:method:: get_observation(observation, core)
+      :abstractmethod:
+
+      Function to do all the post processing of observations (sensor data).
+
+      :param sensor_data: dictionary {sensor_name: sensor_data}
+
+      Should return a tuple or list with two items, the processed observations,
+      as well as a variable with additional information about such observation.
+      The information variable can be empty
+
+
+   .. py:method:: get_done_status(observation, core)
+
+      Returns whether or not the experiment has to end
+
+
+   .. py:method:: compute_reward(observation, core)
+
+      Computes the reward
+
+
+

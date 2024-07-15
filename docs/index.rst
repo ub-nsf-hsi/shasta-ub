@@ -1,3 +1,4 @@
+======================================
 Welcome to shasta's documentation!
 ======================================
 
@@ -7,10 +8,12 @@ Welcome to shasta's documentation!
 
    readme
    installation
-   usage
+   getting-started
    contributing
+   code-of-conduct
    history
 
+==================
 Indices and tables
 ==================
 * :ref:`genindex`

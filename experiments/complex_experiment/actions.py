@@ -1,5 +1,6 @@
 import math as mt
 
+
 class SimpleActionDecoder:
     def __init__(self, config):
         self.config = config

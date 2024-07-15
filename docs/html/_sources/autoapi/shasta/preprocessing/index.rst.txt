@@ -1,0 +1,17 @@
+:py:mod:`shasta.preprocessing`
+==============================
+
+.. py:module:: shasta.preprocessing
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   bake_texture/index.rst
+   preprocess/index.rst
+   utils/index.rst
+
+

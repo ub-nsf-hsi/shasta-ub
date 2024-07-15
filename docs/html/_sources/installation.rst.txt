@@ -32,20 +32,23 @@ You can either clone the public repository:
 
 .. code-block:: console
 
-    $ git clone git://github.com/hemumanju/shasta
+    $ git clone https://github.com/ub-nsf-hsi/shasta-ub.git
 
-Or download the `tarball`_:
 
-.. code-block:: console
+Install the requirements:
 
-    $ curl -OJL https://github.com/hemumanju/shasta/tarball/master
+.. code-block:: bash
 
-Once you have a copy of the source, you can install it with:
+   pip install -r requirements.txt
+
+Install using python:
 
 .. code-block:: console
 
     $ python setup.py install
 
 
-.. _Github repo: https://github.com/hemumanju/shasta
-.. _tarball: https://github.com/hemumanju/shasta/tarball/master
+.. _Github repo: https://github.com/ub-nsf-hsi/shasta-ub
+
+Configure your SHaSTA installation and simulator settings as needed.
+

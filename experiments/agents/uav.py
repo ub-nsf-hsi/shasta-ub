@@ -1,7 +1,8 @@
+import copy
+
 import numpy as np
 
 from shasta.actor import BaseActor
-import copy
 
 
 class UaV(BaseActor):
