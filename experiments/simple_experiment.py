@@ -1,8 +1,8 @@
-from shasta.base_experiment import BaseExperiment
-from shasta.primitives import  Formation
-
-from .agents.uav import UaV
 from gymnasium import spaces
+
+from shasta.base_experiment import BaseExperiment
+from shasta.primitives import Formation
+
 
 class SimpleExperiment(BaseExperiment):
     def __init__(self, config, core, exp):
@@ -21,7 +21,9 @@ class SimpleExperiment(BaseExperiment):
 
     def get_action_space(self):
         """Returns the action space"""
-        return spaces.multi_discrete.MultiDiscrete([self.no_of_buildings,self.no_of_buildings,self.no_of_buildings])
+        return spaces.multi_discrete.MultiDiscrete(
+            [self.no_of_buildings, self.no_of_buildings, self.no_of_buildings]
+        )
 
     def get_observation_space(self):
         """Returns the observation space"""
@@ -42,8 +44,12 @@ class SimpleExperiment(BaseExperiment):
                 current_pos = self.actor_groups[i][0].current_pos
                 new_pos = self.env_map.get_cartesian_node_position(actions[i])
                 new_pos[2] = 10
-                self.formation.execute(self.actor_groups[i], new_pos, current_pos, 'solid')
-                if int(current_pos[0]) == int(new_pos[0]) and int(current_pos[1]) == int(new_pos[1]):
+                self.formation.execute(
+                    self.actor_groups[i], new_pos, current_pos, "solid"
+                )
+                if int(current_pos[0]) == int(new_pos[0]) and int(
+                    current_pos[1]
+                ) == int(new_pos[1]):
                     Status.append(1)
                     self.observation_space[actions[i]] = 1
             if sum(Status) == 3:

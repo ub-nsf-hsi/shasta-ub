@@ -85,7 +85,7 @@ class PathPlanning(object):
             end_lat_lon = self.map.convert_to_lat_lon(end)
             end = ox.distance.nearest_nodes(self.G, X=end_lat_lon[1], Y=end_lat_lon[0])
 
-        route = nx.shortest_path(self.G, start, end, weight='length')
+        route = nx.shortest_path(self.G, start, end, weight="length")
         for u, v in zip(route[:-1], route[1:]):
             # if there are parallel edges, select the shortest in length
             data = min(self.G.get_edge_data(u, v).values(), key=lambda d: d["length"])

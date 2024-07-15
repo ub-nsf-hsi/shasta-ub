@@ -1,12 +1,12 @@
 from collections import defaultdict
 
+from gymnasium import spaces
+
 from shasta.base_experiment import BaseExperiment
 
 from .actions import SimpleActionDecoder
 from .custom_primitive import FormationWithPlanning
 from .states import StatesExtractor
-from .actions import SimpleActionDecoder
-from gymnasium import spaces
 
 
 def group_actors_by_type(actor_groups):
@@ -84,12 +84,12 @@ class SearchingExperiment(BaseExperiment):
         actor_groups = core.get_actor_groups()
         grouped_by_type = group_actors_by_type(actor_groups)
         states = self.state_extractor.get_state(
-            grouped_by_type['uav'], grouped_by_type['ugv']
+            grouped_by_type["uav"], grouped_by_type["ugv"]
         )
 
         # Update progress
         done = self.state_extractor.update_progrees(
-            grouped_by_type['uav'], grouped_by_type['ugv']
+            grouped_by_type["uav"], grouped_by_type["ugv"]
         )
 
         return states, {"searching_done": done}
@@ -101,7 +101,6 @@ class SearchingExperiment(BaseExperiment):
         Should return a bool with True if the episode exceeded the limit set, False otherwise
         """
         return False
-
 
     def get_done_status(self, observation, core):
         """Returns whether the episode has ended.

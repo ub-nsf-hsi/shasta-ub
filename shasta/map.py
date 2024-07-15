@@ -10,8 +10,8 @@ from shasta.preprocessing.utils import extract_building_info
 
 # Import assests
 directories = list(filter(os.path.isdir, os.listdir(os.getcwd())))
-if 'assets' in directories:
-    assets_root = os.path.join('.', 'assets')
+if "assets" in directories:
+    assets_root = os.path.join(".", "assets")
 else:
     raise FileNotFoundError("Assests folder is not found under root directory")
 
@@ -23,15 +23,15 @@ class Map:
     def _affine_transformation_and_graph(self):
         """Performs initial conversion of the lat lon to cartesian"""
         # Graph
-        read_path = self.asset_path + '/map.osm'
-        G = ox.graph_from_xml(read_path, simplify=True, bidirectional='walk')
+        read_path = self.asset_path + "/map.osm"
+        G = ox.graph_from_xml(read_path, simplify=True, bidirectional="walk")
         self.node_graph = nx.convert_node_labels_to_integers(G)
 
         # Transformation matrix
-        read_path = self.asset_path + '/coordinates.csv'
+        read_path = self.asset_path + "/coordinates.csv"
         points = pd.read_csv(read_path)
-        target = points[['x', 'z']].values
-        source = points[['lat', 'lon']].values
+        target = points[["x", "z"]].values
+        source = points[["lat", "lon"]].values
 
         # Pad the points with ones
         X = np.hstack((source, np.ones((source.shape[0], 1))))
@@ -41,7 +41,7 @@ class Map:
         return None
 
     def _setup_building_info(self):
-        read_path = self.asset_path + '/map.osm'
+        read_path = self.asset_path + "/map.osm"
         self.buildings = extract_building_info(read_path, save_fig=False)
 
     def setup(self, experiment_config):
@@ -65,13 +65,13 @@ class Map:
 
         # Read path for ths assets
         try:
-            self.asset_path = '/'.join(
-                [assets_root, self.experiment_config['map_to_use']]
+            self.asset_path = "/".join(
+                [assets_root, self.experiment_config["map_to_use"]]
             )
         except FileNotFoundError:
             try:
-                self.asset_path = '/'.join(
-                    [assets_root, self.experiment_config['map_to_use']]
+                self.asset_path = "/".join(
+                    [assets_root, self.experiment_config["map_to_use"]]
                 )
             except FileNotFoundError:
                 raise FileNotFoundError(
@@ -165,7 +165,7 @@ class Map:
         dict
             A dictionary containing all the information about the building.
         """
-        return self.buildings.loc[self.buildings['id'] == building_index]
+        return self.buildings.loc[self.buildings["id"] == building_index]
 
     def get_lat_lon_spawn_points(self, n_points=5):
         """Get the latitude and longitude spawn points
@@ -202,8 +202,8 @@ class Map:
             The cartesian co-ordinates
         """
         node_info = self.get_node_info(node_index=node_index)
-        lat = node_info['y']
-        lon = node_info['x']
+        lat = node_info["y"]
+        lon = node_info["x"]
         cartesian_pos = np.dot([lat, lon, 1], self.A)
         return cartesian_pos
 
@@ -221,8 +221,8 @@ class Map:
             The cartesian co-ordinates
         """
         node_info = self.get_node_info(node_index=node_index)
-        lat = node_info['y']
-        lon = node_info['x']
+        lat = node_info["y"]
+        lon = node_info["x"]
         return [lat, lon]
 
     def get_cartesian_spawn_points(self, n_points=5):

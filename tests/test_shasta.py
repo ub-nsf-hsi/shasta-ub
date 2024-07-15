@@ -7,7 +7,7 @@ class TestUxV(BaseActor):
         super().__init__()
 
     def _load(self):
-        path = '/'.join([assets_root, 'vehicles', 'arial_vehicle_abstract.urdf'])
+        path = "/".join([assets_root, "vehicles", "arial_vehicle_abstract.urdf"])
         self.object = self.physics_client.loadURDF(
             path,
             self.init_pos,

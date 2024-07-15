@@ -14,7 +14,7 @@ def extract_building_info(osm_path, save_fig=False):
 
     west, north, east, south = nodes.geometry.total_bounds
     polygon = ox.utils_geo.bbox_to_poly(north, south, east, west)
-    gdf = ox.geometries.geometries_from_polygon(polygon, tags={'building': True})
+    gdf = ox.geometries.geometries_from_polygon(polygon, tags={"building": True})
     buildings_proj = ox.project_gdf(gdf, to_crs="EPSG:4326").to_crs(4328)
 
     # Building Info
@@ -22,21 +22,21 @@ def extract_building_info(osm_path, save_fig=False):
 
     # Add more information
     # Save the dataframe representing buildings
-    building_info['lon'] = buildings_proj['geometry'].centroid.x
-    building_info['lat'] = buildings_proj['geometry'].centroid.y
-    building_info['area'] = buildings_proj.area
-    building_info['perimeter'] = buildings_proj.length
+    building_info["lon"] = buildings_proj["geometry"].centroid.x
+    building_info["lat"] = buildings_proj["geometry"].centroid.y
+    building_info["area"] = buildings_proj.area
+    building_info["perimeter"] = buildings_proj.length
     try:
-        building_info.loc[:, 'height'] = buildings_proj['height']
+        building_info.loc[:, "height"] = buildings_proj["height"]
     except KeyError:
-        building_info.loc[:, 'height'] = 10  # assumption
-    building_info['id'] = np.arange(len(buildings_proj))
+        building_info.loc[:, "height"] = 10  # assumption
+    building_info["id"] = np.arange(len(buildings_proj))
 
     if save_fig:
         save_path = Path(osm_path)
         ox.plot_graph(G)
         ox.plot.plot_footprints(
-            buildings_proj, save=True, filepath=save_path.with_suffix('.jpg')
+            buildings_proj, save=True, filepath=save_path.with_suffix(".jpg")
         )
 
     return building_info
