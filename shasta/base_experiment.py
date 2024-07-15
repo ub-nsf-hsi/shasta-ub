@@ -66,6 +66,15 @@ class BaseExperiment(with_metaclass(ABCMeta, object)):
         """
         return NotImplementedError
 
+    @abstractmethod
+    def get_truncated_status(self, observation, core):
+        """Function to indicate that the episode is terminated because it reached an artificial limit set,
+        for example: time or timesteps exceeded
+
+        Should return a bool with True if the episode exceeded the limit set, False otherwise
+        """
+        return NotImplementedError
+
     def get_done_status(self, observation, core):
         """Returns whether or not the experiment has to end"""
         return NotImplementedError

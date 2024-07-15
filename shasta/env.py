@@ -5,7 +5,7 @@
 
 from __future__ import print_function
 
-import gym
+import gymnasium as gym
 
 from .core import ShastaCore
 
@@ -46,7 +46,7 @@ class ShastaEnv(gym.Env):
 
         self.reset()
 
-    def reset(self):
+    def reset(self, seed = None, options = None):
         """Reset the simulation
 
         Returns
@@ -59,22 +59,34 @@ class ShastaEnv(gym.Env):
 
         # Tick once and get the observations
         raw_data = self.core.tick()
-        observation, _ = self.experiment.get_observation(raw_data, self.core)
-
-        return observation
+        observation, info = self.experiment.get_observation(raw_data, self.core)
+        print('-' * 32)
+        return observation, info
 
     def step(self, action):
-        """Computes one tick of the environment in order to return the new observation,
-        as well as the rewards"""
+        """
+        Computes one tick of the environment in order to return the new observation,
+        as well as the rewards
 
+        Parameters
+        ----------
+        action : action space provided in experiment file
+
+        Returns
+        -------
+        new observations, reward for taking a step, truncated or done status and info
+            
+        """
         self.experiment.apply_actions(action, self.core)
         raw_data = self.core.tick()
 
         observation, info = self.experiment.get_observation(raw_data, self.core)
         done = self.experiment.get_done_status(observation, self.core)
         reward = self.experiment.compute_reward(observation, self.core)
+        truncated = self.experiment.get_truncated_status(observation, self.core)
+        return observation, reward,truncated, done, info
 
-        return observation, reward, done, info
+            
 
     def close(self):
         self.core.close_simulation()

@@ -1,10 +1,19 @@
 from shasta.base_experiment import BaseExperiment
+from shasta.primitives import  Formation
 
+from .agents.uav import UaV
+from gymnasium import spaces
 
 class SimpleExperiment(BaseExperiment):
-    def __init__(self, config, core):
+    def __init__(self, config, core, exp):
         super().__init__(config, core)
-        pass
+        self.env_map = core.get_map()
+        self.observation_space = []
+        self.no_of_buildings = len(self.env_map.get_all_buildings())
+        for i in range(self.no_of_buildings):
+            self.observation_space.append(0)
+        self.formation = Formation()
+        self.actor_groups = core.get_actor_groups()
 
     def reset(self):
         """Called at the beginning and each time the simulation is reset"""
@@ -12,11 +21,11 @@ class SimpleExperiment(BaseExperiment):
 
     def get_action_space(self):
         """Returns the action space"""
-        pass
+        return spaces.multi_discrete.MultiDiscrete([self.no_of_buildings,self.no_of_buildings,self.no_of_buildings])
 
     def get_observation_space(self):
         """Returns the observation space"""
-        pass
+        return spaces.Box(low=0, high=1, shape=(self.no_of_buildings,))
 
     def get_actions(self):
         """Returns the actions"""
@@ -27,7 +36,19 @@ class SimpleExperiment(BaseExperiment):
 
         :param action: value outputted by the policy
         """
-        pass
+        while True:
+            Status = []
+            for i in range(3):
+                current_pos = self.actor_groups[i][0].current_pos
+                new_pos = self.env_map.get_cartesian_node_position(actions[i])
+                new_pos[2] = 10
+                self.formation.execute(self.actor_groups[i], new_pos, current_pos, 'solid')
+                if int(current_pos[0]) == int(new_pos[0]) and int(current_pos[1]) == int(new_pos[1]):
+                    Status.append(1)
+                    self.observation_space[actions[i]] = 1
+            if sum(Status) == 3:
+                break
+            core.tick()
 
     def get_observation(self, observation, core):
         """Function to do all the post processing of observations (sensor data).
@@ -38,12 +59,28 @@ class SimpleExperiment(BaseExperiment):
         as well as a variable with additional information about such observation.
         The information variable can be empty
         """
-        return None, {}
+        return self.observation_space, {}
+
+    def get_truncated_status(self, observation, core):
+        """Function to indicate that the episode is terminated because it reached an artificial limit set,
+        for example: time or timesteps exceeded
+
+        Should return a bool with True if the episode exceeded the limit set, False otherwise
+        """
+        return False
 
     def get_done_status(self, observation, core):
-        """Returns whether or not the experiment has to end"""
-        return NotImplementedError
+        """Returns whether the episode has ended.
+
+        Should return True if the episode ended due to the agent achieving a goal, failing, or any other task-specific termination condition
+        """
+        if sum(self.observation_space) == self.no_of_buildings:
+            return True
+        return False
 
     def compute_reward(self, observation, core):
-        """Computes the reward"""
-        pass
+        """Computes the reward
+        return : float
+            Amount of reward returned after previous action.
+        """
+        return sum(self.observation_space)
