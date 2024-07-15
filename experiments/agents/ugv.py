@@ -12,7 +12,7 @@ class UgV(BaseActor):
         # Platoon properties
         self.vehicle_id = 0
         self.platoon_id = 0
-        self.type = 'ugv'
+        self.type = "ugv"
 
         # Properties UAV
         self.init_pos = None
@@ -39,7 +39,7 @@ class UgV(BaseActor):
             )
 
         # Load the mesh
-        path = '/'.join(['./assets', 'vehicles', 'ground_vehicle_abstract.urdf'])
+        path = "/".join(["./assets", "vehicles", "ground_vehicle_abstract.urdf"])
         self.object = self.physics_client.loadURDF(
             path,
             self.init_pos,

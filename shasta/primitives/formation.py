@@ -51,9 +51,7 @@ class Formation(object):
 
         # Calculate the velocity of each neighboor particle
         k = 1 / self.knn  # constant
-        g_lij = (self.min_dis**2) - np.linalg.norm(
-            curr_pos - peers_pos, axis=1, ord=2
-        )
+        g_lij = (self.min_dis**2) - np.linalg.norm(curr_pos - peers_pos, axis=1, ord=2)
         del_g_ij = 2 * (peers_pos - curr_pos)
         P_ij = k * np.dot(np.maximum(0, g_lij / (self.min_dis**2)) ** 2, del_g_ij)
         f_g_ij = (
